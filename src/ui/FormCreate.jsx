@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import Input from "./Input";
+import { useState } from "react";
 
 const SectionContainer = styled.div`
   border: 1px solid #d3d3d3;
@@ -78,26 +79,22 @@ const AddButton = styled.button`
   font-size: 14px;
 `;
 
-function FormCreate({ value, setValue, handleOnAdd }) {
-    return (
-        <SectionContainer>
-            <Header>
-                <div style={{ display: 'flex', flex: '1', alignItems: 'center' }}>
-                    <TitleLabel>New section:</TitleLabel>
-                    <TitleInput value={value} onChange={(e) => setValue(e.target.value)} type="text" placeholder="Enter a Title" />
-                </div>
-            </Header>
-            <ObjectiveSection>
-                <ObjectiveLabel>What will students be able to do at the end of this section?</ObjectiveLabel>
-                <ObjectiveInput type="text" placeholder="Enter a Learning Objective" />
-
-            </ObjectiveSection>
-            <Footer>
-                <CancelButton>Cancel</CancelButton>
-                <AddButton onClick={() => handleOnAdd()}>Add Section</AddButton>
-            </Footer >
-        </SectionContainer >
-    );
+function FormCreate({ value, setIsEdit, handleOnAdd }) {
+  const [state, setState] = useState(value)
+  return (
+    <SectionContainer>
+      <Header>
+        <div style={{ display: 'flex', flex: '1', alignItems: 'center' }}>
+          <TitleLabel>New section:</TitleLabel>
+          <TitleInput value={state} onChange={(e) => setState(e.target.value)} type="text" placeholder="Enter a Title" />
+        </div>
+      </Header>
+      <Footer>
+        <CancelButton onClick={() => setIsEdit(false)}>Cancel</CancelButton>
+        <AddButton onClick={() => handleOnAdd(state)}>Save Section</AddButton>
+      </Footer >
+    </SectionContainer >
+  );
 }
 
 export default FormCreate

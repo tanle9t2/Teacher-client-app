@@ -3,6 +3,8 @@ import { FaPen } from "react-icons/fa";
 import { RiDeleteBinFill } from "react-icons/ri";
 import FormCreate from "../../ui/FormCreate";
 import LectureItem from "./LectureItem";
+import { useState } from "react";
+import { useUpdateSection } from "./useUpdateSection";
 
 const SectionTitle = styled.h3`
   font-size: 16px;
@@ -33,30 +35,49 @@ const Button = styled.button`
     opacity: 0.9;
   }
 `;
+const StyledSectionItem = styled.div`
+  margin:20px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+`
+function SectionItem({ section, idxSection, handleAddSubContent, handleAddContent }) {
+  const [isEdit, setIsEdit] = useState(false)
+  const { id, name, contentList: contents } = section;
+  const { updateSection } = useUpdateSection()
+  function handleOnChangeName(value) {
+    updateSection({ id: section.id, name: value }, {
+      onSuccess: () => {
+        setIsEdit((prev) => !prev)
+      }
+    })
+  }
 
-function SectionItem({ idxSection, isEdit, lectures, name, content, setValue, handleAddContent, handleAddSubContent }) {
-    if (isEdit)
-        return <FormCreate value={name} setValue={setValue} />
+  if (isEdit)
+    return <FormCreate value={name} setIsEdit={setIsEdit} handleOnAdd={handleOnChangeName} />
 
-    return (
-        <div>
-            <SectionTitle>Section {idxSection + 1}: {name}
-                <Icon>
-                    <FaPen />
-                </Icon>
-                <Icon>
-                    <RiDeleteBinFill />
-                </Icon>
-            </SectionTitle>
-            <LectureList>
-                {lectures.map(({ name, subContents }, idx) => <LectureItem
-                    handleAddSubContent={handleAddSubContent}
-                    handleAddContent={handleAddContent}
-                    subContents={subContents} content={content} name={name} idxSection={idxSection} idxLecture={idx} />)}
-                <Button primary>+ Curriculum item</Button>
-            </LectureList>
-        </div>
-    )
+  return (
+    <StyledSectionItem>
+      <SectionTitle>Section {idxSection + 1}: {name}
+        <Icon onClick={() => setIsEdit(prev => !prev)}>
+          <FaPen />
+        </Icon>
+        <Icon>
+          <RiDeleteBinFill />
+        </Icon>
+      </SectionTitle>
+      <LectureList>
+        {contents.map((content, idx) => <LectureItem
+          key={content.id}
+          content={content}
+          handleAddSubContent={handleAddSubContent}
+          handleAddContent={handleAddContent}
+          idxSection={id} idxLecture={idx} />)}
+        <Button primary>+ Curriculum item</Button>
+      </LectureList>
+    </StyledSectionItem>
+  )
 }
 
 export default SectionItem

@@ -6,6 +6,7 @@ import { MdSlowMotionVideo } from "react-icons/md";
 import { IoDocumentText } from "react-icons/io5";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoIosArrowUp } from "react-icons/io";
+import { useCreateSubContent } from "./useCreateSubContent";
 const LectureTitle = styled.div`
   display:flex;
 `
@@ -75,13 +76,36 @@ const InforRow = styled.div`
     padding:10px;
     grid-template-columns:0.4fr 0.2fr 0.2fr 0.2fr;
 `
+const ProgressContainer = styled.div`
+  margin-top: 1rem;
+  width: 100%;
+  height: 1rem;
+  background-color: #e5e7eb; /* Tailwind gray-200 */
+  border-radius: 9999px;
+  overflow: hidden;
+`;
 
-function LectureItem({ idxSection, idxLecture, name, content, subContents, handleAddSubContent, handleAddContent }) {
+const ProgressBar = styled.div`
+  height: 100%;
+  background-color: #2563eb; /* Tailwind blue-600 */
+  transition: width 0.3s ease;
+  width: ${({ progress }) => progress}%;
+`;
+function LectureItem({ idxSection, idxLecture, content, handleAddContent }) {
+    const { id, subContents, name, file } = content
+
     const [isAddContent, setIsAddContent] = useState(false);
     const [isAddSubContent, setIsSubContent] = useState(false);
+    const [isCollpaseSection, setIsCollapseSection] = useState(content ? true : false)
+    const [uploadProgress, setUploadProgress] = useState(0);
+    const [selectFile, setSelectedFile] = useState(null);
+
+    const { isPending, uploadFile } = useCreateSubContent()
+
     const fileInputRef = useRef(null);
     const videoInputRef = useRef(null);
     const subContentRef = useRef(null);
+
     const handleClickFile = () => {
         fileInputRef.current.click();
         handleAddContent();
@@ -100,9 +124,14 @@ function LectureItem({ idxSection, idxLecture, name, content, subContents, handl
     }
     function handleOnChangeSubcontent(e) {
         const file = e.target.files[0]; // Get the first file
-        if (file) {
-            handleAddSubContent(file, idxSection, idxLecture)
-        }
+        if (!file) return
+        setSelectedFile(file)
+        uploadFile({ mainContentId: id, type: "LESSON", file, setUploadProgress }, {
+            onSuccess: (data) => {
+                console.log(data)
+                setUploadProgress(0)
+            }
+        })
     }
     return (
         <StyledLectureItem>
@@ -120,8 +149,12 @@ function LectureItem({ idxSection, idxLecture, name, content, subContents, handl
                         <Button onClick={() => setIsAddContent(prev => !prev)}>+ Content</Button>
 
                     </div>}
-                    {isAddContent && !content && <Button onClick={() => setIsAddContent(prev => !prev)}>Select content type</Button>}
-                    <p style={{ "cursor": "pointer" }} onClick={() => setIsSubContent(prev => !prev)}>{!isAddSubContent ? <IoIosArrowDown /> : <IoIosArrowUp />}</p>
+                    {isAddContent && !content && <>
+                        <Button onClick={() => setIsAddContent(prev => !prev)}>Select content type</Button>
+                        <p style={{ "cursor": "pointer" }} onClick={() => setIsSubContent(prev => !prev)}>{!isAddSubContent ? <IoIosArrowDown /> : <IoIosArrowUp />}</p>
+                    </>}
+                    {content && <p style={{ "cursor": "pointer" }} onClick={() => setIsCollapseSection(prev => !prev)}>{isCollpaseSection ? <IoIosArrowDown /> : <IoIosArrowUp />}</p>}
+
                 </div>
             </div>
             {isAddContent && !content &&
@@ -162,7 +195,7 @@ function LectureItem({ idxSection, idxLecture, name, content, subContents, handl
                     </div>
                 </Content>
             }
-            {content &&
+            {isCollpaseSection &&
                 <>
                     <InforContent>
                         <InforHeader>Filename</InforHeader>
@@ -172,19 +205,29 @@ function LectureItem({ idxSection, idxLecture, name, content, subContents, handl
                     </InforContent>
                     <InforRow>
                         <p>{content.name}</p>
-                        <p>{content.type.startsWith("video/") ? "Video" : "File"}</p>
+                        <p>{file ? "File" : "Video"}</p>
 
                         <p>Replace</p>
                     </InforRow>
                 </>
-
-
             }
             {
-                (isAddSubContent || content) &&
+                (isAddSubContent || isCollpaseSection) &&
                 <SubContent>
+                    {
+                        isPending && (
+                            <div style={{ width: " 100%", margin: "10px 0" }}>
+                                <p style={{ margin: "10px 0" }}>{selectFile.name} </p>
+                                <ProgressContainer>
+                                    <ProgressBar progress={uploadProgress} />
+                                </ProgressContainer>
+                            </div>
+                        )
+                    }
                     <div >
-                        {subContents.map((file) => <p style={{ margin: "10px 0" }}>{file.name}</p>,)}
+                        {subContents.map((file) =>
+                            <p style={{ margin: "10px 0" }}>{file.name} </p>
+                        )}
                     </div>
                     <Button onClick={handleClickSubResource}>+ Resourse
                         <input

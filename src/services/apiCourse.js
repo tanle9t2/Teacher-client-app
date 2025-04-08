@@ -19,3 +19,12 @@ export async function getCourseOfTeacher(teacherId, page) {
         throw new Error("Failed create course");
     }
 }
+export async function getCourse(courseId) {
+    try {
+        const res = await api.get(`/course/${courseId}`);
+        return res.data;
+    } catch (error) {
+        console.error("Failed create course:", error);
+        throw new Error("Failed create course");
+    }
+}

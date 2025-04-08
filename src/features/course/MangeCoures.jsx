@@ -2,6 +2,8 @@ import styled from "styled-components";
 
 import { useReducer } from "react";
 import SectionItem from "./SectionItem";
+import { useCourse } from "./useCourse";
+import Spinner from "../../ui/Spinner";
 // Styled Components
 const Container = styled.div`
   display: flex;
@@ -14,10 +16,6 @@ const Container = styled.div`
 
 const MainContent = styled.div`
   flex: 1;
-  background-color: #fff;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;
 
 const Title = styled.h1`
@@ -48,11 +46,8 @@ const Button = styled.button`
 `;
 
 const Section = styled.div`
-  border: 1px solid #e8ecef;
-  border-radius: 4px;
   padding: 10px;
   margin-bottom: 20px;
-  background-color:#f6f7f9;
 `;
 const initialState = [
   {
@@ -87,7 +82,10 @@ function reducer(state, action) {
   }
 }
 function MangeCoures() {
-  const [sections, dispatch] = useReducer(reducer, initialState)
+  const { isLoading, course } = useCourse()
+  const [dispatch] = useReducer(reducer, initialState)
+  if (isLoading) return <Spinner />
+  const { sections } = course;
   function handleAddContent(file, idx) {
 
     dispatch({
@@ -104,17 +102,18 @@ function MangeCoures() {
       }
     })
   }
-  console.log(sections)
+  console.log(course);
   return (
     <MainContent>
       <Title>Curriculum</Title>
-      <Section>
-        {sections.map(({ name, lectures, content, isEdit }, idx) => <SectionItem
-
+      <div>
+        {sections.map((section, idx) => <SectionItem
+          key={section.id}
+          section={section}
           handleAddSubContent={handleAddSubContent}
           handleAddContent={handleAddContent} name={name}
-          lectures={lectures} content={content} isEdit={isEdit} idxSection={idx} />)}
-      </Section>
+          idxSection={idx} />)}
+      </div>
       <Button>+ Section</Button>
     </MainContent>
 
