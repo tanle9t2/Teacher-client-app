@@ -26,6 +26,7 @@ const Button = styled.button`
   color: ${props => props.primary ? '#fff' : '#6b46c1'};
   border: ${props => props.primary ? 'none' : '1px solid #6b46c1'};
   padding: 10px 20px;
+  margin:10px 0 ;
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
@@ -46,20 +47,22 @@ function SectionItem({ section, idxSection, handleAddSubContent, handleAddConten
   const [isEdit, setIsEdit] = useState(false)
   const { id, name, contentList: contents } = section;
   const { updateSection } = useUpdateSection()
+  const [nameS, setNameS] = useState(name)
   function handleOnChangeName(value) {
     updateSection({ id: section.id, name: value }, {
       onSuccess: () => {
+        setNameS(value)
         setIsEdit((prev) => !prev)
       }
     })
   }
 
   if (isEdit)
-    return <FormCreate value={name} setIsEdit={setIsEdit} handleOnAdd={handleOnChangeName} />
+    return <FormCreate value={nameS} setIsEdit={setIsEdit} handleOnAdd={handleOnChangeName} />
 
   return (
     <StyledSectionItem>
-      <SectionTitle>Section {idxSection + 1}: {name}
+      <SectionTitle>Section {idxSection + 1}: {nameS}
         <Icon onClick={() => setIsEdit(prev => !prev)}>
           <FaPen />
         </Icon>

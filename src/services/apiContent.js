@@ -19,3 +19,28 @@ export async function createSubContent(name, type, mainContentId, file, onProgre
         throw new Error("Failed create course");
     }
 }
+export async function deleteSubContent(subId) {
+    try {
+        return api.delete(`/content/sub/${subId}`);
+    } catch (error) {
+        console.error("Failed create course:", error);
+        throw new Error("Failed create course");
+    }
+}
+export async function updateContent({ id, name, type }, file) {
+    const formData = new FormData();
+    if (name)
+        formData.append("name", name)
+    if (file) {
+        formData.append("file", file)
+        formData.append("type", type)
+    }
+    try {
+        return api.post(`/content/${id}`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+        });
+    } catch (error) {
+        console.error("Failed update content:", error);
+        throw new Error("Failed create course");
+    }
+}

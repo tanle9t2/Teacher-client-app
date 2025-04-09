@@ -2,7 +2,7 @@ import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`:root {
     /* Indigo */
-    --primay-color:#6b21a8;
+    --primary-color:#6b46c1;
     --white-color:#ffff;
     /* Grey */
     &, &.light-mode {

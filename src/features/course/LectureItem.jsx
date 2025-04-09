@@ -7,6 +7,13 @@ import { IoDocumentText } from "react-icons/io5";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoIosArrowUp } from "react-icons/io";
 import { useCreateSubContent } from "./useCreateSubContent";
+import FormCreate from "../../ui/FormCreate";
+import { useUpdateContent } from "./useUpdateContent";
+import { getFileType } from "../../utils/helper";
+import toast from "react-hot-toast";
+import Spinner from "../../ui/Spinner";
+import { useDeleteSubContent } from "./useDeleteSubContent";
+
 const LectureTitle = styled.div`
   display:flex;
 `
@@ -26,6 +33,7 @@ const Button = styled.button`
   background-color: ${props => props.primary ? '#6b46c1' : '#fff'};
   color: ${props => props.primary ? '#fff' : '#6b46c1'};
   border: ${props => props.primary ? 'none' : '1px solid #6b46c1'};
+  margin:10px 0;
   padding: 10px 20px;
   border-radius: 4px;
   cursor: pointer;
@@ -91,35 +99,87 @@ const ProgressBar = styled.div`
   transition: width 0.3s ease;
   width: ${({ progress }) => progress}%;
 `;
-function LectureItem({ idxSection, idxLecture, content, handleAddContent }) {
-    const { id, subContents, name, file } = content
+function LectureItem({ idxLecture, content }) {
 
+    const [state, setState] = useState(content);
+    const { id, subContents, name, resource } = state;
+
+    const [isEditName, setIsEditName] = useState(false)
     const [isAddContent, setIsAddContent] = useState(false);
-    const [isAddSubContent, setIsSubContent] = useState(false);
-    const [isCollpaseSection, setIsCollapseSection] = useState(content ? true : false)
+
+
     const [uploadProgress, setUploadProgress] = useState(0);
     const [selectFile, setSelectedFile] = useState(null);
 
+    //state of content
+
+
+    const [isCollpaseSection, setIsCollapseSection] = useState(resource ? true : false)
+    //mutation
     const { isPending, uploadFile } = useCreateSubContent()
+    const { isPending: pendingUploadContent, updateContent } = useUpdateContent()
+    const { deleteSubContent } = useDeleteSubContent()
+
 
     const fileInputRef = useRef(null);
     const videoInputRef = useRef(null);
     const subContentRef = useRef(null);
+    const replaceContentRef = useRef(null)
+
 
     const handleClickFile = () => {
         fileInputRef.current.click();
-        handleAddContent();
     };
+    const handleOnClickReplace = () => {
+        replaceContentRef.current.click();
+    }
     const handleClickVideo = () => {
         videoInputRef.current.click();
     };
     const handleClickSubResource = () => {
         subContentRef.current.click();
     };
+
+    const handleRemoveSubContent = (subId) => {
+        deleteSubContent({ subId }, {
+            onSuccess: () => {
+                toast.success("Successfully delete sub contain")
+                setState(prev => ({ ...prev, subContents: prev.subContents.filter(s => s.id !== subId) }))
+            }
+        })
+    }
+    const handleOnChangeReplaceRef = (e) => {
+        const file = e.target.files[0]; // Get the first file
+        if (file) {
+            const type = getFileType(file)
+            updateContent({ id, type, file }, {
+                onSuccess: ({ data }) => {
+                    const { data: content } = data
+                    toast.success("Successfully update resource")
+                    setState(prev => ({ ...prev, resource: content.resource }))
+                }
+            })
+        }
+    }
+    const handleOnChangeName = (value) => {
+        updateContent({ id, name: value }, {
+            onSuccess: () => {
+                setState(prev => ({ ...prev, name: value }))
+                setIsEditName(false)
+            }
+        })
+    }
+
     function handleOnChangeContent(e) {
         const file = e.target.files[0]; // Get the first file
         if (file) {
-            handleAddContent(file, idxSection)
+            updateContent({ id, type: e.target.name, file }, {
+                onSuccess: ({ data }) => {
+                    const { data: content } = data
+                    console.log(content.resource)
+                    setState(prev => ({ ...prev, resource: content.resource }))
+                }
+            })
         }
     }
     function handleOnChangeSubcontent(e) {
@@ -133,31 +193,34 @@ function LectureItem({ idxSection, idxLecture, content, handleAddContent }) {
             }
         })
     }
+    if (pendingUploadContent) return <Spinner />
+    if (isEditName) return <FormCreate value={name} setIsEdit={setIsEditName} handleOnAdd={handleOnChangeName} />
+
+
     return (
         <StyledLectureItem>
             <div style={{ display: "flex", padding: "10px", justifyContent: "space-between" }}>
                 <LectureTitle>Lecture {idxLecture + 1}: {name}
                     <Icon>
-                        <FaPen />
+                        <FaPen onClick={() => setIsEditName(true)} />
                     </Icon>
                     <Icon>
                         <RiDeleteBinFill />
                     </Icon>
                 </LectureTitle>
                 <div style={{ display: "flex", alignItems: "center" }}>
-                    {!isAddContent && !content && <div style={{ display: "flex", alignItems: "center" }}>
+                    {!isAddContent && !resource && <div style={{ display: "flex", alignItems: "center" }}>
                         <Button onClick={() => setIsAddContent(prev => !prev)}>+ Content</Button>
-
                     </div>}
-                    {isAddContent && !content && <>
+                    {isAddContent && !resource && <>
                         <Button onClick={() => setIsAddContent(prev => !prev)}>Select content type</Button>
-                        <p style={{ "cursor": "pointer" }} onClick={() => setIsSubContent(prev => !prev)}>{!isAddSubContent ? <IoIosArrowDown /> : <IoIosArrowUp />}</p>
+
                     </>}
                     {content && <p style={{ "cursor": "pointer" }} onClick={() => setIsCollapseSection(prev => !prev)}>{isCollpaseSection ? <IoIosArrowDown /> : <IoIosArrowUp />}</p>}
 
                 </div>
             </div>
-            {isAddContent && !content &&
+            {isAddContent && !resource &&
                 <Content>
                     <p>
                         Select the main type of content. Files and links can be added as resources.
@@ -167,9 +230,9 @@ function LectureItem({ idxSection, idxLecture, content, handleAddContent }) {
                             <div style={{ display: "flex", alignItems: "center", height: "6rem" }}>
                                 <MdSlowMotionVideo />
                                 <input
+                                    name="VIDEO"
                                     onChange={handleOnChangeContent}
                                     accept="video/*"
-
                                     type="file"
                                     ref={fileInputRef}
                                     id="fileInput"
@@ -182,6 +245,7 @@ function LectureItem({ idxSection, idxLecture, content, handleAddContent }) {
                             <div style={{ display: "flex", alignItems: "center", height: "6rem" }}>
                                 <IoDocumentText />
                                 <input
+                                    name="FILE"
                                     onChange={handleOnChangeContent}
                                     accept=".doc, .docx, .xls, .xlsx, .pdf"
                                     type="file"
@@ -195,7 +259,7 @@ function LectureItem({ idxSection, idxLecture, content, handleAddContent }) {
                     </div>
                 </Content>
             }
-            {isCollpaseSection &&
+            {isCollpaseSection && resource &&
                 <>
                     <InforContent>
                         <InforHeader>Filename</InforHeader>
@@ -204,15 +268,23 @@ function LectureItem({ idxSection, idxLecture, content, handleAddContent }) {
                         <InforHeader></InforHeader>
                     </InforContent>
                     <InforRow>
-                        <p>{content.name}</p>
-                        <p>{file ? "File" : "Video"}</p>
+                        <p>{resource.name}</p>
+                        <p>{resource.type}</p>
 
-                        <p>Replace</p>
+                        <p style={{ color: "var(--primary-color)", cursor: "pointer" }} onClick={handleOnClickReplace}>Replace</p>
+                        <input
+                            onChange={handleOnChangeReplaceRef}
+                            accept=".doc, .docx, .xls, .xlsx, .pdf, video/*"
+                            type="file"
+                            ref={replaceContentRef}
+                            id="fileInput"
+                            style={{ display: "none" }} // Hide the default file input
+                        />
                     </InforRow>
                 </>
             }
             {
-                (isAddSubContent || isCollpaseSection) &&
+                (isCollpaseSection) &&
                 <SubContent>
                     {
                         isPending && (
@@ -225,8 +297,15 @@ function LectureItem({ idxSection, idxLecture, content, handleAddContent }) {
                         )
                     }
                     <div >
-                        {subContents.map((file) =>
-                            <p style={{ margin: "10px 0" }}>{file.name} </p>
+                        {subContents.map(({ name, id }) =>
+
+                            <p key={id} style={{ margin: "10px 0", display: "flex" }}>{name}
+                                <Icon>
+                                    <RiDeleteBinFill onClick={() => handleRemoveSubContent(id)} />
+                                </Icon>
+                            </p>
+
+
                         )}
                     </div>
                     <Button onClick={handleClickSubResource}>+ Resourse

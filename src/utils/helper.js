@@ -107,3 +107,22 @@ export const setAuth = (auth) => {
     localStorage.setItem("auth", JSON.stringify(auth));
 
 }
+export const getFileType = (file) => {
+    const mimeType = file.type;
+
+    if (mimeType.startsWith("video/")) {
+        return "VIDEO"
+    } else if (
+        mimeType === "application/pdf" ||
+        mimeType === "application/msword" ||
+        mimeType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" || // .docx
+        mimeType === "application/vnd.ms-excel" ||
+        mimeType === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" // .xlsx
+    ) {
+        return "FILE"
+    }
+}
+export const getFileNameFromUrl = (url) => {
+    const cleanUrl = url.split('?')[0]; // Remove query params if any
+    return decodeURIComponent(cleanUrl.substring(cleanUrl.lastIndexOf('/') + 1));
+}
