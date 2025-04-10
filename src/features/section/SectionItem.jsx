@@ -2,10 +2,10 @@ import styled from "styled-components";
 import { FaPen } from "react-icons/fa";
 import { RiDeleteBinFill } from "react-icons/ri";
 import FormCreate from "../../ui/FormCreate";
-import LectureItem from "./LectureItem";
+import LectureItem from "../lecture/LectureItem";
 import { useState } from "react";
 import { useUpdateSection } from "./useUpdateSection";
-import { useCreateContent } from "./useCreateContent";
+import { useCreateContent } from "../lecture/useCreateContent";
 
 import Spinner from "../../ui/Spinner";
 import { useDeleteSection } from "./useDeleteSection";

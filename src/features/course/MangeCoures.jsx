@@ -1,10 +1,10 @@
 import styled from "styled-components";
 
 import { useEffect, useReducer, useState } from "react";
-import SectionItem from "./SectionItem";
+import SectionItem from "../section/SectionItem";
 import { useCourse } from "./useCourse";
 import Spinner from "../../ui/Spinner";
-import { useCreateSection } from "./useCreateSection";
+import { useCreateSection } from "../section/useCreateSection";
 import FormCreate from "../../ui/FormCreate";
 import { useParams } from "react-router-dom";
 // Styled Components
