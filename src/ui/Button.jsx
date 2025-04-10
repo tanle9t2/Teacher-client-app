@@ -18,6 +18,12 @@ const sizes = {
     padding: 1.2rem 2.4rem;
     font-weight: 500;
   `,
+  fit: css`
+    min-width:80px;
+    font-size: 1.6rem;
+    padding: 1.2rem 2.4rem;
+    font-weight: 500;
+  `
 };
 
 const variations = {

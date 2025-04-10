@@ -5,6 +5,14 @@ import FormCreate from "../../ui/FormCreate";
 import LectureItem from "./LectureItem";
 import { useState } from "react";
 import { useUpdateSection } from "./useUpdateSection";
+import { useCreateContent } from "./useCreateContent";
+
+import Spinner from "../../ui/Spinner";
+import { useDeleteSection } from "./useDeleteSection";
+import toast from "react-hot-toast";
+import Modal from "../../ui/Modal";
+import ConfirmDelete from "../../ui/ConfirmDelete"
+
 
 const SectionTitle = styled.h3`
   font-size: 16px;
@@ -43,22 +51,49 @@ const StyledSectionItem = styled.div`
   border-radius: 8px;
   padding: 20px;
 `
-function SectionItem({ section, idxSection, handleAddSubContent, handleAddContent }) {
+function SectionItem({ section, idxSection, handleRemoveSection, handleAddSubContent, handleAddContent }) {
+  const { id, name, contentList } = section;
+
   const [isEdit, setIsEdit] = useState(false)
-  const { id, name, contentList: contents } = section;
+  const [isAdd, setisAdd] = useState(false)
+
   const { updateSection } = useUpdateSection()
+  const { createContent } = useCreateContent()
+  const { isPending, deleteSection } = useDeleteSection()
+
   const [nameS, setNameS] = useState(name)
-  function handleOnChangeName(value) {
-    updateSection({ id: section.id, name: value }, {
+  const [contents, setContents] = useState(contentList)
+  const [typeContent, setTypeContent] = useState("LESSON")
+  function handleOnClickRemove() {
+    deleteSection({ id }, {
       onSuccess: () => {
-        setNameS(value)
-        setIsEdit((prev) => !prev)
+        toast.success("Successfully delete section")
+        handleRemoveSection(id)
       }
     })
   }
+  function handleOnChangeName(value) {
+    if (isEdit)
+      updateSection({ id: section.id, name: value }, {
+        onSuccess: () => {
+          setNameS(value)
+          setIsEdit((prev) => !prev)
+        }
+      })
+    if (isAdd)
+      createContent({ name: value, typeContent, sectionId: id }, {
+        onSuccess: ({ data }) => {
+          setContents(prev => [...prev, data.data])
+          setisAdd(false)
+        }
+      })
+
+  }
+  if (isPending) return <Spinner />
+
 
   if (isEdit)
-    return <FormCreate value={nameS} setIsEdit={setIsEdit} handleOnAdd={handleOnChangeName} />
+    return <FormCreate title="New Section" value={nameS} setIsEdit={setIsEdit} handleOnAdd={handleOnChangeName} />
 
   return (
     <StyledSectionItem>
@@ -67,18 +102,38 @@ function SectionItem({ section, idxSection, handleAddSubContent, handleAddConten
           <FaPen />
         </Icon>
         <Icon>
-          <RiDeleteBinFill />
+          <Modal>
+            <Modal.OpenButton opens="delete">
+              <RiDeleteBinFill />
+            </Modal.OpenButton>
+            <Modal.Window name="delete">
+              <ConfirmDelete
+                resourceName="course"
+                onConfirm={() => handleOnClickRemove()}
+
+              />
+            </Modal.Window>
+          </Modal>
+
+
         </Icon>
       </SectionTitle>
       <LectureList>
-        {contents.map((content, idx) => <LectureItem
+        {contents?.map((content, idx) => <LectureItem
           key={content.id}
           content={content}
           handleAddSubContent={handleAddSubContent}
           handleAddContent={handleAddContent}
           idxSection={id} idxLecture={idx} />)}
-        <Button primary>+ Curriculum item</Button>
+        {isAdd && <FormCreate value={""} setIsEdit={setisAdd} handleOnAdd={handleOnChangeName}>
+          <div style={{ display: "flex" }}>
+            <Button primary={typeContent === "EXERCISE"} onClick={() => setTypeContent("EXERCISE")}>Exercise</Button>
+            <Button primary={typeContent === "LESSON"} onClick={() => setTypeContent("LESSON")}>Lesson</Button>
+          </div>
+        </FormCreate>}
+        <Button onClick={() => setisAdd(true)} primary>+ Curriculum item</Button>
       </LectureList>
+
     </StyledSectionItem>
   )
 }

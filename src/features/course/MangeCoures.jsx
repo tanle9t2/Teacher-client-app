@@ -1,9 +1,12 @@
 import styled from "styled-components";
 
-import { useReducer } from "react";
+import { useEffect, useReducer, useState } from "react";
 import SectionItem from "./SectionItem";
 import { useCourse } from "./useCourse";
 import Spinner from "../../ui/Spinner";
+import { useCreateSection } from "./useCreateSection";
+import FormCreate from "../../ui/FormCreate";
+import { useParams } from "react-router-dom";
 // Styled Components
 const Container = styled.div`
   display: flex;
@@ -83,9 +86,18 @@ function reducer(state, action) {
 }
 function MangeCoures() {
   const { isLoading, course } = useCourse()
+  const { courseId } = useParams();
   const [dispatch] = useReducer(reducer, initialState)
+  const [isAddSection, setIsAddSection] = useState(false)
+  const { isPending, createSection } = useCreateSection()
+  const [sections, setSections] = useState([])
+  useEffect(() => {
+    if (!isLoading && course) {
+      setSections(course.sections)
+    }
+  }, [course, isLoading])
+
   if (isLoading) return <Spinner />
-  const { sections } = course;
   function handleAddContent(file, idx) {
 
     dispatch({
@@ -102,19 +114,33 @@ function MangeCoures() {
       }
     })
   }
-  console.log(course);
+  function handleCreateSection(value) {
+    createSection({ name: value, courseId }, {
+      onSuccess: ({ data }) => {
+        setIsAddSection(false);
+        setSections(prev => [...prev, data])
+      }
+    })
+  }
+  function handleRemoveSection(id) {
+    setSections(prev => prev.filter(item => item.id !== id))
+  }
   return (
     <MainContent>
       <Title>Curriculum</Title>
-      <div>
+      <div style={{ margin: "10px 0" }}>
         {sections.map((section, idx) => <SectionItem
           key={section.id}
           section={section}
+          handleRemoveSection={handleRemoveSection}
           handleAddSubContent={handleAddSubContent}
           handleAddContent={handleAddContent} name={name}
           idxSection={idx} />)}
+        {
+          isAddSection && <FormCreate title="New Section" value={""} setIsEdit={setIsAddSection} handleOnAdd={handleCreateSection} />
+        }
       </div>
-      <Button>+ Section</Button>
+      <Button onClick={() => setIsAddSection(true)} disabled={isPending}>+ Section</Button>
     </MainContent>
 
   );

@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import Input from "./Input";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 const SectionContainer = styled.div`
   border: 1px solid #d3d3d3;
@@ -79,20 +80,31 @@ const AddButton = styled.button`
   font-size: 14px;
 `;
 
-function FormCreate({ value, setIsEdit, handleOnAdd }) {
+function FormCreate({ value, setIsEdit, handleOnAdd, title = "New Lecture", children }) {
   const [state, setState] = useState(value)
+  function handleOnConfirm() {
+    const validate = (state.length > 0 && state.trim() === '') || state === "";
+    if (validate)
+      toast.error("Please input name")
+    else
+      handleOnAdd(state)
+  }
   return (
     <SectionContainer>
       <Header>
         <div style={{ display: 'flex', flex: '1', alignItems: 'center' }}>
-          <TitleLabel>New section:</TitleLabel>
+          <TitleLabel>{title}:</TitleLabel>
           <TitleInput value={state} onChange={(e) => setState(e.target.value)} type="text" placeholder="Enter a Title" />
+
         </div>
+
       </Header>
+      {children}
       <Footer>
         <CancelButton onClick={() => setIsEdit(false)}>Cancel</CancelButton>
-        <AddButton onClick={() => handleOnAdd(state)}>Save Section</AddButton>
+        <AddButton onClick={() => handleOnConfirm()}>Save Section</AddButton>
       </Footer >
+
     </SectionContainer >
   );
 }

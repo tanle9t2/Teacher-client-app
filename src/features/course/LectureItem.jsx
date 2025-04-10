@@ -13,6 +13,7 @@ import { getFileType } from "../../utils/helper";
 import toast from "react-hot-toast";
 import Spinner from "../../ui/Spinner";
 import { useDeleteSubContent } from "./useDeleteSubContent";
+import { flushSync } from "react-dom";
 
 const LectureTitle = styled.div`
   display:flex;
@@ -110,7 +111,7 @@ function LectureItem({ idxLecture, content }) {
 
     const [uploadProgress, setUploadProgress] = useState(0);
     const [selectFile, setSelectedFile] = useState(null);
-
+    const [removeSubId, setRemoveSubId] = useState([]);
     //state of content
 
 
@@ -141,11 +142,13 @@ function LectureItem({ idxLecture, content }) {
     };
 
     const handleRemoveSubContent = (subId) => {
+        setRemoveSubId(prev => [...prev, subId])
         deleteSubContent({ subId }, {
             onSuccess: () => {
                 toast.success("Successfully delete sub contain")
                 setState(prev => ({ ...prev, subContents: prev.subContents.filter(s => s.id !== subId) }))
-            }
+            },
+            onSettled: () => setRemoveSubId(prev => prev.filter(item => item !== subId))
         })
     }
     const handleOnChangeReplaceRef = (e) => {
@@ -156,11 +159,14 @@ function LectureItem({ idxLecture, content }) {
                 onSuccess: ({ data }) => {
                     const { data: content } = data
                     toast.success("Successfully update resource")
-                    setState(prev => ({ ...prev, resource: content.resource }))
+                    flushSync(() => {
+                        setState(prev => ({ ...prev, resource: content.resource }))
+                    })
                 }
             })
         }
     }
+    console.log(state)
     const handleOnChangeName = (value) => {
         updateContent({ id, name: value }, {
             onSuccess: () => {
@@ -176,7 +182,6 @@ function LectureItem({ idxLecture, content }) {
             updateContent({ id, type: e.target.name, file }, {
                 onSuccess: ({ data }) => {
                     const { data: content } = data
-                    console.log(content.resource)
                     setState(prev => ({ ...prev, resource: content.resource }))
                 }
             })
@@ -187,9 +192,13 @@ function LectureItem({ idxLecture, content }) {
         if (!file) return
         setSelectedFile(file)
         uploadFile({ mainContentId: id, type: "LESSON", file, setUploadProgress }, {
-            onSuccess: (data) => {
-                console.log(data)
-                setUploadProgress(0)
+            onSuccess: ({ data }) => {
+                flushSync(() => {
+                    setState(prev => ({
+                        ...prev,
+                        subContents: [...prev.subContents, data.data]
+                    }))
+                })
             }
         })
     }
@@ -298,14 +307,14 @@ function LectureItem({ idxLecture, content }) {
                     }
                     <div >
                         {subContents.map(({ name, id }) =>
-
                             <p key={id} style={{ margin: "10px 0", display: "flex" }}>{name}
                                 <Icon>
                                     <RiDeleteBinFill onClick={() => handleRemoveSubContent(id)} />
                                 </Icon>
+                                {
+                                    removeSubId.includes(id) && <span>Deleting ....</span>
+                                }
                             </p>
-
-
                         )}
                     </div>
                     <Button onClick={handleClickSubResource}>+ Resourse
