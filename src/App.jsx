@@ -10,6 +10,8 @@ import CreateCoursePage from "./pages/CreateCoursePage";
 import { Toaster } from "react-hot-toast";
 import MangeCoures from "./features/course/MangeCoures";
 import MangeCourseLayout from "./ui/MangeCourseLayout";
+import MangeContentPage from "./pages/MangeContentPage";
+import ManageBasicInfoCourse from "./features/course/ManageBasicInfoCourse";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -43,7 +45,8 @@ function App() {
             }
           >
             <Route index element={<Navigate replace to="curriculum" />} />
-            <Route index path="curriculum" element={<MangeCoures />} />
+            <Route index path="curriculum" element={<MangeContentPage />} />
+            <Route index path="basics" element={<ManageBasicInfoCourse />} />
           </Route>
 
         </Routes>

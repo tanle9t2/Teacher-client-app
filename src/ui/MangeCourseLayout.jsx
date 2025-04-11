@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 import SiderbarManageCourse from "./SiderbarManageCourse";
+import Header from "./Header";
 
 const StyledMangeCourseLayout = styled.div`
   display: grid;
@@ -16,17 +17,20 @@ const Container = styled.div`
   flex-direction: column;
   gap: 3.2rem;
 `;
-function MangeCourseLayout() {
-    return (
-        <StyledMangeCourseLayout>
-            <SiderbarManageCourse />
-            <Main>
-                <Container>
-                    <Outlet />
-                </Container>
-            </Main>
-        </StyledMangeCourseLayout>
-    )
+function MangeCourseLayout({ coureName }) {
+  return (
+    <>
+      <Header coureName={coureName} />
+      <StyledMangeCourseLayout>
+        <SiderbarManageCourse />
+        <Main>
+          <Container>
+            <Outlet />
+          </Container>
+        </Main>
+      </StyledMangeCourseLayout>
+    </>
+  )
 }
 
 export default MangeCourseLayout

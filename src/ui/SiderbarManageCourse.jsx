@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import Button from "./Button";
 import { TiTick } from "react-icons/ti";
+import { Link } from "react-router-dom";
 const Sidebar = styled.div`
   width: 300px;
   padding: 4rem 4.8rem 6.4rem;
@@ -57,34 +58,28 @@ function SiderbarManageCourse() {
         <Sidebar>
             <SidebarTitle>Create your content</SidebarTitle>
             <Checklist>
-                <ChecklistItem>
-                    <CircleOutline aria-label="Completed">
-                        <svg style={{ "width": "1.6rem", "height": " 1.6rem" }} aria-hidden="true" focusable="false">
-                            <TiTick />
-                        </svg>
-                    </CircleOutline>
-                    Curriculum
-                </ChecklistItem>
-                <ChecklistItem>
-                    <CircleOutline aria-label="Completed">
-                        <svg style={{ "width": "1.6rem", "height": " 1.6rem" }} aria-hidden="true" focusable="false">
-                            <TiTick />
-                        </svg>
-                    </CircleOutline>
-                    Course landing page
-                </ChecklistItem>
-                <ChecklistItem>
-                    <CircleOutline aria-label="Completed">
-                        <svg style={{ "width": "1.6rem", "height": " 1.6rem" }} aria-hidden="true" focusable="false">
-                            <TiTick />
-                        </svg>
-                    </CircleOutline>
-                    Pricing
-                </ChecklistItem>
-
+                <Link to="curriculum">
+                    <ChecklistItem>
+                        <CircleOutline aria-label="Completed">
+                            <svg style={{ "width": "1.6rem", "height": " 1.6rem" }} aria-hidden="true" focusable="false">
+                                <TiTick />
+                            </svg>
+                        </CircleOutline>
+                        Curriculum
+                    </ChecklistItem>
+                </Link>
+                <Link to="basics">
+                    <ChecklistItem >
+                        <CircleOutline aria-label="Completed">
+                            <svg style={{ "width": "1.6rem", "height": " 1.6rem" }} aria-hidden="true" focusable="false">
+                                <TiTick />
+                            </svg>
+                        </CircleOutline>
+                        Course landing page
+                    </ChecklistItem>
+                </Link>
             </Checklist>
-            <SubmitButton>Submit for Review</SubmitButton>
-        </Sidebar>
+        </Sidebar >
     )
 }
 

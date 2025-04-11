@@ -14,6 +14,7 @@ import toast from "react-hot-toast";
 import Spinner from "../../ui/Spinner";
 import { useDeleteSubContent } from "./useDeleteSubContent";
 import { flushSync } from "react-dom";
+import { useDeleteMainContent } from "./useDeleteMainContent";
 
 const LectureTitle = styled.div`
   display:flex;
@@ -100,7 +101,7 @@ const ProgressBar = styled.div`
   transition: width 0.3s ease;
   width: ${({ progress }) => progress}%;
 `;
-function LectureItem({ idxLecture, content }) {
+function LectureItem({ idxLecture, content, handleRemoveContent }) {
 
     const [state, setState] = useState(content);
     const { id, subContents, name, resource } = state;
@@ -120,6 +121,7 @@ function LectureItem({ idxLecture, content }) {
     const { isPending, uploadFile } = useCreateSubContent()
     const { isPending: pendingUploadContent, updateContent } = useUpdateContent()
     const { deleteSubContent } = useDeleteSubContent()
+    const { isPending: pedingDeleteMainContent, deleteMainContent } = useDeleteMainContent()
 
 
     const fileInputRef = useRef(null);
@@ -175,6 +177,13 @@ function LectureItem({ idxLecture, content }) {
             }
         })
     }
+    const handleOnRemoveMainContent = () => {
+        deleteMainContent({ id }, {
+            onSuccess: () => {
+                handleRemoveContent(id)
+            }
+        })
+    }
 
     function handleOnChangeContent(e) {
         const file = e.target.files[0]; // Get the first file
@@ -202,7 +211,7 @@ function LectureItem({ idxLecture, content }) {
             }
         })
     }
-    if (pendingUploadContent) return <Spinner />
+    if (pendingUploadContent || pedingDeleteMainContent) return <Spinner />
     if (isEditName) return <FormCreate value={name} setIsEdit={setIsEditName} handleOnAdd={handleOnChangeName} />
 
 
@@ -214,7 +223,7 @@ function LectureItem({ idxLecture, content }) {
                         <FaPen onClick={() => setIsEditName(true)} />
                     </Icon>
                     <Icon>
-                        <RiDeleteBinFill />
+                        <RiDeleteBinFill onClick={() => handleOnRemoveMainContent()} />
                     </Icon>
                 </LectureTitle>
                 <div style={{ display: "flex", alignItems: "center" }}>

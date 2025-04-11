@@ -25,10 +25,10 @@ function SelectedBox({ state, handleOnChange, data, defaultValue }) {
                 }} value="">
                     <em>{defaultValue}</em>
                 </MenuItem >
-                {data.map(item => <MenuItem sx={{
+                {data.map((item, idx) => <MenuItem sx={{
                     fontSize: 16,
 
-                }} key={item.id} value={item.id}>{item.name}</MenuItem>)}
+                }} key={item.id || idx} value={item.id || item}>{item.name || item}</MenuItem>)}
             </Select>
         </FormControl>
     );

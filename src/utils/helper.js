@@ -126,3 +126,7 @@ export const getFileNameFromUrl = (url) => {
     const cleanUrl = url.split('?')[0]; // Remove query params if any
     return decodeURIComponent(cleanUrl.substring(cleanUrl.lastIndexOf('/') + 1));
 }
+export const formatWithDots = (number) => {
+    if (!number) return null;
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}

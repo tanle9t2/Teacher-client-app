@@ -44,6 +44,11 @@ const StyledCourseItem = styled.div`
     margin: 10px 0;
     box-shadow:var(--shadow-md);
 `
+const Image = styled.img`
+  width:100%;
+  height:100px;
+  max-height:100px;
+`
 const Banner = styled.div`
     overflow: hidden;
     position: relative;
@@ -52,21 +57,21 @@ const Banner = styled.div`
     margin-right:20px;
 `
 function CourseItem({ id, banner, name, description }) {
-    const navigate = useNavigate();
-    return (
-        <StyledCourseItem>
-            <Banner>
-                <img src={banner || "CourseBannerDefault.webp"} />
-            </Banner>
-            <TextContent>
-                <Heading>{name}</Heading>
-                <Description>
-                    {description || "Create a really attractive description"}
-                </Description>
-                <Link onClick={() => navigate(`/instructor/course/${id}/manage/curriculum`)}>Edit/Manage Course</Link>
-            </TextContent>
-        </StyledCourseItem>
-    )
+  const navigate = useNavigate();
+  return (
+    <StyledCourseItem>
+      <Banner>
+        <Image src={banner || "CourseBannerDefault.webp"} />
+      </Banner>
+      <TextContent>
+        <Heading>{name}</Heading>
+        <Description>
+          {description || "Create a really attractive description"}
+        </Description>
+        <Link onClick={() => navigate(`/instructor/course/${id}/manage/curriculum`)}>Edit/Manage Course</Link>
+      </TextContent>
+    </StyledCourseItem>
+  )
 }
 
 export default CourseItem

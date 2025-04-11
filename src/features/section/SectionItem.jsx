@@ -62,7 +62,7 @@ function SectionItem({ section, idxSection, handleRemoveSection, handleAddSubCon
   const { isPending, deleteSection } = useDeleteSection()
 
   const [nameS, setNameS] = useState(name)
-  const [contents, setContents] = useState(contentList)
+  const [contents, setContents] = useState(contentList || [])
   const [typeContent, setTypeContent] = useState("LESSON")
   function handleOnClickRemove() {
     deleteSection({ id }, {
@@ -88,6 +88,9 @@ function SectionItem({ section, idxSection, handleRemoveSection, handleAddSubCon
         }
       })
 
+  }
+  function handleRemoveContent(id) {
+    setContents(prev => prev.filter(item => item.id !== id))
   }
   if (isPending) return <Spinner />
 
@@ -122,6 +125,7 @@ function SectionItem({ section, idxSection, handleRemoveSection, handleAddSubCon
         {contents?.map((content, idx) => <LectureItem
           key={content.id}
           content={content}
+          handleRemoveContent={handleRemoveContent}
           handleAddSubContent={handleAddSubContent}
           handleAddContent={handleAddContent}
           idxSection={id} idxLecture={idx} />)}

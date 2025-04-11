@@ -8,29 +8,14 @@ import { useCreateSection } from "../section/useCreateSection";
 import FormCreate from "../../ui/FormCreate";
 import { useParams } from "react-router-dom";
 // Styled Components
-const Container = styled.div`
-  display: flex;
-  padding: 20px;
-  background-color: #f5f7fa;
-  min-height: 100vh;
-`;
-
-
 
 const MainContent = styled.div`
   flex: 1;
 `;
-
 const Title = styled.h1`
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 20px;
-`;
-
-
-const InfoText = styled.p`
-  font-size: 14px;
-  color: #666;
 `;
 
 const Button = styled.button`
