@@ -130,3 +130,13 @@ export const formatWithDots = (number) => {
     if (!number) return null;
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
+export const convertDate = (createdAt) => {
+    const date = new Date(createdAt[0], createdAt[1] - 1, createdAt[2], createdAt[3], createdAt[4]);
+    const formatted =
+        (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + '-' +
+        (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)) + '-' +
+        date.getFullYear() + ' ' +
+        (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':' +
+        (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes());
+    return formatted;
+}

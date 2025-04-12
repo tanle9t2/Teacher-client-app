@@ -5,6 +5,10 @@ import styled from "styled-components";
 // import UserAvatar from "../features/authentication/UserAvatar";
 
 const StyleHeader = styled.header`
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
   background-color: #1d1e27;
   padding: 1.2rem 4.8rem;
   border-bottom: 1px solid var(--color-grey-100);

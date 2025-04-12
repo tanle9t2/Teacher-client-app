@@ -12,6 +12,11 @@ import MangeCoures from "./features/course/MangeCoures";
 import MangeCourseLayout from "./ui/MangeCourseLayout";
 import MangeContentPage from "./pages/MangeContentPage";
 import ManageBasicInfoCourse from "./features/course/ManageBasicInfoCourse";
+import ManageInformationCoursePage from "./pages/ManageInformationCoursePage";
+import CommunicationLayout from "./ui/CommunicationLayout";
+import AssignmentPage from "./pages/AssignmentPage"
+import AnnouncementPage from "./pages/AnnouncementPage"
+import AssignmentDetail from "./features/assisgnment/AssignmentDetail";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -34,6 +39,12 @@ function App() {
             }
           >
             <Route path="/" element={<Home />} />
+            <Route path="/instructor/communication/" element={<CommunicationLayout />}>
+              <Route index element={<Navigate replace to="assginments" />} />
+              <Route path="answer/:answerId" element={<AssignmentDetail />} />
+              <Route path="assginments" element={<AssignmentPage />} />
+              <Route path="announcements" element={<AnnouncementPage />} />
+            </Route>
           </Route>
           <Route path="/course/create" element={<CreateCoursePage />} />
           <Route path="/course/create" element={<CreateCoursePage />} />
@@ -46,7 +57,7 @@ function App() {
           >
             <Route index element={<Navigate replace to="curriculum" />} />
             <Route index path="curriculum" element={<MangeContentPage />} />
-            <Route index path="basics" element={<ManageBasicInfoCourse />} />
+            <Route index path="basics" element={<ManageInformationCoursePage />} />
           </Route>
 
         </Routes>

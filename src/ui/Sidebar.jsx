@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FaChartBar, FaComment, FaQuestionCircle, FaVideo, FaWrench } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const SidebarContainer = styled.div`
@@ -9,6 +10,7 @@ const SidebarContainer = styled.div`
   color: white;
   padding: 10px;
   position: fixed;
+  z-index:100;
   transition: width 0.3s ease-in-out;
   display: flex;
   flex-direction: column;
@@ -49,6 +51,7 @@ const MenuItem = styled.div`
 
 function Sidebar() {
   const [expanded, setExpanded] = useState(false);
+  const navigate = useNavigate()
   return (
     <SidebarContainer
       expanded={expanded}
@@ -57,11 +60,11 @@ function Sidebar() {
     >
       <Logo expanded={expanded}>udemy</Logo>
 
-      <MenuItem expanded={expanded}>
+      <MenuItem onClick={() => navigate("/")} expanded={expanded}>
         <FaVideo size={20} />
         <span>Courses</span>
       </MenuItem>
-      <MenuItem expanded={expanded}>
+      <MenuItem onClick={() => navigate("/instructor/communication")} expanded={expanded}>
         <FaComment size={20} />
         <span>Communication</span>
       </MenuItem>

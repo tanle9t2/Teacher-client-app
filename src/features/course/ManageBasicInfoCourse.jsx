@@ -199,18 +199,12 @@ function ManageBasicInfoCourse() {
       </Section>
       <Section>
         <Label>Basic info</Label>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", marginLeft: "-8px" }}>
           <SelectedBox handleOnChange={handleOnChangeLevel} state={level || courseLevel} data={levels} defaultValue={"Select level --"} />
           <SelectedBox handleOnChange={handleOnChangeCategory} state={category || courseCate.id} data={categories} defaultValue={"Choose a category"} />
         </div>
 
       </Section>
-
-      <Section>
-        <Label>What is primarily taught in your course?</Label>
-        <Input type="text" placeholder="e.g. Landscape Photography" />
-      </Section>
-
       <Section>
         <Label>Course image</Label>
         <UploadArea>

@@ -52,7 +52,7 @@ const Image = styled.img`
 const Banner = styled.div`
     overflow: hidden;
     position: relative;
-    width: 11.8rem;
+    width: 17.8rem;
     height: 100%;
     margin-right:20px;
 `
