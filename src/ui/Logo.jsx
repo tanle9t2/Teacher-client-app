@@ -1,25 +1,15 @@
-import { Link } from "react-router-dom";
-import styled from "styled-components";
-import { useDarkMode } from "../context/DarkModeContext";
-
-const StyledLogo = styled.div`
-  text-align: center;
-`;
-
-const Img = styled.img`
-  height: 9.6rem;
-  width: auto;
-`;
+import { useNavigate } from "react-router-dom";
 
 function Logo() {
-  const { isDarkMode } = useDarkMode();
-  const url = !isDarkMode ? "/logo-light.png" : "/logo-dark.png";
+  const navigate = useNavigate();
+
   return (
-    <StyledLogo>
-      <Link to="dashboard">
-        <Img src={url} alt="Logo" />
-      </Link>
-    </StyledLogo>
+    <div onClick={() => navigate("/")} className="w-[10rem] cursor-pointer">
+      <img
+        className="w-full h-full object-contain"
+        src="https://frontends.udemycdn.com/frontends-homepage/staticx/udemy/images/v7/logo-udemy.svg"
+      />
+    </div>
   );
 }
 

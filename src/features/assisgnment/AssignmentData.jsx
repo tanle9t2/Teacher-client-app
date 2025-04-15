@@ -12,7 +12,7 @@ import { useNavigate, useSearchParams } from "react-router-dom"
 import { convertDate } from "../../utils/helper"
 
 const StyledAssignmentData = styled.div`
-    
+      padding-right:20px;
 `
 const Header = styled.div`
     display:flex;

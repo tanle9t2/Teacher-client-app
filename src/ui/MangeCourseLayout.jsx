@@ -7,6 +7,7 @@ const StyledMangeCourseLayout = styled.div`
   display: grid;
   grid-template-columns: 26rem 1fr;
   height: 100vh;
+  padding-top:50px;
 `;
 const Main = styled.main`
   background-color: var(--color-grey-50);

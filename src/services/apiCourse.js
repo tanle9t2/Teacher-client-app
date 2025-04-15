@@ -1,8 +1,9 @@
-import api from "./api";
+import { AUTH_REQUEST } from "../utils/axiosConfig";
+
 
 export async function createCourse({ name, teacherId, categoryId }) {
     try {
-        const res = await api.post(`/course`, { name, teacherId, categoryId });
+        const res = await AUTH_REQUEST.post(`/course`, { name, teacherId, categoryId });
         return res.data;
     } catch (error) {
         console.error("Failed create course:", error);
@@ -11,7 +12,7 @@ export async function createCourse({ name, teacherId, categoryId }) {
 }
 export async function getBasicsInfo(id) {
     try {
-        const res = await api.get(`/course/${id}/basics`);
+        const res = await AUTH_REQUEST.get(`/course/${id}/basics`);
         return res.data;
     } catch (error) {
         console.error("Failed create course:", error);
@@ -27,7 +28,7 @@ export async function updateBasicsInfor({ id, name, description, level, price, c
     if (file) formData.append("file", file)
     if (price) formData.append("price", price)
     try {
-        const res = await api.post(`/course/${id}`, formData, {
+        const res = await AUTH_REQUEST.post(`/course/${id}`, formData, {
             headers: { 'Content-Type': 'multipart/form-data' }
         });
         return res.data;
@@ -37,9 +38,14 @@ export async function updateBasicsInfor({ id, name, description, level, price, c
     }
 }
 
-export async function getCourseOfTeacher(teacherId, page) {
+export async function getCourseOfTeacher(page, kw) {
+    const params = new URLSearchParams();
+    if (kw)
+        params.append("kw", kw)
+    if (page)
+        params.append("page", page)
     try {
-        const res = await api.get(`/courses/teacher/${teacherId}?page=${page}`);
+        const res = await AUTH_REQUEST.get(`/courses/teacher?${params.toString()}`);
         return res.data;
     } catch (error) {
         console.error("Failed create course:", error);
@@ -48,7 +54,7 @@ export async function getCourseOfTeacher(teacherId, page) {
 }
 export async function getCourseFilter(teacherId) {
     try {
-        const res = await api.get(`/courses/filter/${teacherId}`);
+        const res = await AUTH_REQUEST.get(`/courses/filter/${teacherId}`);
         return res.data;
     } catch (error) {
         console.error("Failed create course:", error);
@@ -57,7 +63,7 @@ export async function getCourseFilter(teacherId) {
 }
 export async function getCourse(courseId) {
     try {
-        const res = await api.get(`/course/${courseId}`);
+        const res = await AUTH_REQUEST.get(`/course/${courseId}`);
         return res.data;
     } catch (error) {
         console.error("Failed create course:", error);

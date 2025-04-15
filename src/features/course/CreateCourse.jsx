@@ -188,7 +188,7 @@ function CreateCourse() {
           <LogoIcon>⌂</LogoIcon> Open Course
         </Logo>
         <StepIndicator>Step {step} of {2}</StepIndicator>
-        <ExitButton href="#">Exit</ExitButton>
+        <ExitButton onClick={() => navigate(-1)} href="#">Exit</ExitButton>
       </Header>
       <ProgressBarContainer>
         <ProgressBar progress={progress} />

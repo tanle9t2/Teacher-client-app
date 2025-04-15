@@ -21,7 +21,7 @@ function Pagination({ pages }) {
         <StyledPagination>
             <MyPagination sx={{
                 "& .Mui-selected": {
-                    backgroundColor: "var(--primay-color) !important", // Dynamic colors
+                    backgroundColor: "var(--primary-color) !important", // Dynamic colors
                     color: "white",
                 },
                 '& .MuiPaginationItem-root': {

@@ -1,8 +1,9 @@
-import api from "./api";
+import { AUTH_REQUEST } from "../utils/axiosConfig";
+
 
 export async function updateSection({ id, name }) {
     try {
-        const res = await api.put(`/section/${id}`, { name });
+        const res = await AUTH_REQUEST.put(`/section/${id}`, { name });
         return res.data;
     } catch (error) {
         console.error("Failed getting category:", error);
@@ -11,7 +12,7 @@ export async function updateSection({ id, name }) {
 }
 export async function createSection({ courseId, name }) {
     try {
-        const res = await api.post(`/section`, { name, courseId });
+        const res = await AUTH_REQUEST.post(`/section`, { name, courseId });
         return res.data;
     } catch (error) {
         console.error("Failed create section:", error);
@@ -20,7 +21,7 @@ export async function createSection({ courseId, name }) {
 }
 export async function deleteSection(id) {
     try {
-        return api.delete(`/section/${id}`);
+        return AUTH_REQUEST.delete(`/section/${id}`);
     } catch (error) {
         console.error("Failed delete section:", error);
         throw new Error("Failed delete section");

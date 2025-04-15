@@ -28,10 +28,7 @@ export const calculateDayDifference = (date) => {
     // Nếu nhỏ hơn hoặc bằng 30 ngày, trả về số ngày
     return `${differenceInDays} ngày`;
 }
-export const getAuthHeaders = () => {
-    const token = localStorage.getItem("accessToken");
-    return token ? { "Authorization": `Bearer ${JSON.parse(token)}` } : {};
-}
+
 
 export const validateEmail = (value) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -140,3 +137,38 @@ export const convertDate = (createdAt) => {
         (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes());
     return formatted;
 }
+export const getAccessToken = () => {
+    const token = window.localStorage.getItem("auth_token");
+    if (token == null) return null;
+    return JSON.parse(token).accessToken;
+};
+
+export const getRefreshToken = () => {
+    const token = window.localStorage.getItem("auth_token");
+    if (token == null) return null;
+    return JSON.parse(token).refreshToken;
+};
+
+export const AuthenticationHeader = function () {
+    return {
+        Authorization: `Bearer ${getAccessToken()}`,
+    };
+};
+
+export const setLocalStorageToken = (token) => {
+    window.localStorage.setItem("auth_token", JSON.stringify(token));
+};
+
+export const removeLocalStorageToken = () => {
+    window.localStorage.removeItem("auth_token");
+};
+
+export function generateUUID() {
+    return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, (c) =>
+        (
+            +c ^
+            (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (+c / 4)))
+        ).toString(16)
+    );
+}
+

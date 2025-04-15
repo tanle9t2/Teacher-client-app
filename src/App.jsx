@@ -17,6 +17,10 @@ import CommunicationLayout from "./ui/CommunicationLayout";
 import AssignmentPage from "./pages/AssignmentPage"
 import AnnouncementPage from "./pages/AnnouncementPage"
 import AssignmentDetail from "./features/assisgnment/AssignmentDetail";
+import Authentication from "./pages/Authentication";
+import LoginSection from "./features/Authentication/LoginSection"
+import RegisterSection from "./features/Authentication/RegisterSection"
+import ProtectedRouter from "./pages/ProtectedRouter";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -35,7 +39,10 @@ function App() {
         <Routes>
           <Route
             element={
-              <AppLayout />
+              <ProtectedRouter>
+                <AppLayout />
+              </ProtectedRouter>
+
             }
           >
             <Route path="/" element={<Home />} />
@@ -47,7 +54,7 @@ function App() {
             </Route>
           </Route>
           <Route path="/course/create" element={<CreateCoursePage />} />
-          <Route path="/course/create" element={<CreateCoursePage />} />
+
 
           <Route
             path="/instructor/course/:courseId/manage/"
@@ -59,7 +66,10 @@ function App() {
             <Route index path="curriculum" element={<MangeContentPage />} />
             <Route index path="basics" element={<ManageInformationCoursePage />} />
           </Route>
-
+          <Route path="/auth" element={<Authentication />}>
+            <Route path="login" element={<LoginSection />} />
+            <Route path="register" element={<RegisterSection />} />
+          </Route>
         </Routes>
       </BrowserRouter>
       <Toaster

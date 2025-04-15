@@ -97,15 +97,19 @@ function AssignmentDetail() {
     const { isPending, updateGrade } = useUpdateGrade()
     const { createCommnent } = useAddComment()
     const [newMark, setNewMark] = useState(null)
+    const [commentList, setCommentList] = useState(null)
     const [newComment, setNewComment] = useState(null)
     const commentInputRef = useRef(null)
+
     useEffect(() => {
         if (!isLoading) {
             setNewMark(submission.mark)
+            setCommentList(submission.comments || [])
         }
     }, [isLoading, submission])
+
     if (isLoading) return <Spinner />
-    const { id, answer, studentInfo, content, comments } = submission;
+    const { id, answer, studentInfo, content } = submission;
     function handleOnUpdateGrade() {
         updateGrade({ submissionId: id, mark: newMark })
     }
@@ -122,8 +126,14 @@ function AssignmentDetail() {
     function handleAddComment(e) {
         if (e.key === 'Enter') {
             if (newComment && newComment !== "") {
-                createCommnent({ submissionId: id, content: newComment, userInfo: { id: "a0a0dbd6-3be9-4a57-94aa-7e752f09c786" } },
-                    { onSuccess: () => setNewComment("") }
+                createCommnent({ submissionId: id, content: newComment },
+                    {
+                        onSuccess: ({ data }) => {
+                            setNewComment("")
+                            console.log(data)
+                            setCommentList(prev => [...prev, { ...data }])
+                        }
+                    }
                 )
             }
         }
@@ -165,12 +175,11 @@ function AssignmentDetail() {
                 placeholder="Add your comment or answer..."
             />
             <QuestionList>
-                {comments.map(({ userInfo, content }) =>
+                {commentList?.map(({ userInfo, content }) =>
                     <QuestionRow >
 
                         <div style={{ display: 'flex', alignItems: "center" }}>
-                            <Avatar src={userInfo.avt ? studentInfo.avt : "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"} />
-
+                            <Avatar src={userInfo.avt ? userInfo.avt : "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"} />
                         </div>
 
                         <QuestionDetails>

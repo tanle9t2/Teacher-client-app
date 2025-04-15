@@ -4,7 +4,7 @@ import toast from "react-hot-toast"
 
 export function useAddComment() {
     const { isPending, mutate: createCommnent } = useMutation({
-        mutationFn: ({ submissionId, content, userInfo }) => createCommnentAPI({ submissionId, content, userInfo }),
+        mutationFn: ({ submissionId, content }) => createCommnentAPI({ submissionId, content }),
         onSuccess: () => toast.success("Successfully"),
         onError: (error) => toast.error(error.message)
     })

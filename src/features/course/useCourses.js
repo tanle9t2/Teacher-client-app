@@ -6,21 +6,22 @@ export function useCourses() {
     const queryClient = useQueryClient();
     const [searchParams] = useSearchParams();
     const page = searchParams.get("page") ? searchParams.get("page") : 1
+    const kw = searchParams.get("kw")
     const { isLoading, data: { data: courses, totalPages } = {}, error } = useQuery({
-        queryKey: ["course", page],
-        queryFn: () => getCourseOfTeacher("a0a0dbd6-3be9-4a57-94aa-7e752f09c786", page)
+        queryKey: ["course", page, kw],
+        queryFn: () => getCourseOfTeacher(page, kw)
     })
 
     if (page < totalPages) {
         queryClient.prefetchQuery({
-            queryKey: ["course", page + 1],
-            queryFn: () => getCourseOfTeacher("a0a0dbd6-3be9-4a57-94aa-7e752f09c786", page + 1)
+            queryKey: ["course", page + 1, kw],
+            queryFn: () => getCourseOfTeacher(page + 1, kw)
         });
     }
     if (page > 1) {
         queryClient.prefetchQuery({
-            queryKey: ["course", page - 1],
-            queryFn: () => getCourseOfTeacher("a0a0dbd6-3be9-4a57-94aa-7e752f09c786", page - 1)
+            queryKey: ["course", page - 1, kw],
+            queryFn: () => getCourseOfTeacher(page - 1,)
         });
     }
 

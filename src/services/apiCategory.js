@@ -1,8 +1,9 @@
-import api from "./api";
+import { API } from "../utils/axiosConfig";
+
 
 export async function getCategoryFollowLevel(parentName, level) {
     try {
-        const res = await api.get(`/categories?parentName=${parentName}&level=${level}`);
+        const res = await API.get(`/categories?parentName=${parentName}&level=${level}`);
         return res.data;
     } catch (error) {
         console.error("Failed getting category:", error);

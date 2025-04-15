@@ -1,46 +1,37 @@
-import styled from "styled-components";
 
-const StyledFormRow = styled.div`
-  display: grid;
-  align-items: center;
-  grid-template-columns: 24rem 1fr 1.2fr;
-  gap: 2.4rem;
-
-  padding: 1.2rem 0;
-
-  &:first-child {
-    padding-top: 0;
-  }
-
-  &:last-child {
-    padding-bottom: 0;
-  }
-
-  &:not(:last-child) {
-    border-bottom: 1px solid var(--color-grey-100);
-  }
-
-  &:has(button) {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1.2rem;
-  }
-`;
-const Label = styled.label`
-  font-weight: 500;
-`;
-const Error = styled.span`
-  font-size: 1.4rem;
-  color: var(--color-red-700);
-`;
-
-function FormRow({ label, error, children }) {
+import Label from "./Label";
+function Input({ ...props }) {
   return (
-    <StyledFormRow>
-      {label && <Label htmlFor={children.props.id}>{label}</Label>}
-      {children}
-      {error && <Error>{error}</Error>}
-    </StyledFormRow>
+    <>
+      <input
+        defaultValue={props.valueInput}
+        type={props.type}
+        {...(props.register
+          ? { ...props.register(props.name, props.option) }
+          : null)}
+        className="rounded-lg text-3xl p-4 mt-4 w-full border border-1"
+        onChange={props.onChange}
+      />
+      {props.error && <p className="text-red-500">{props.error}</p>}
+    </>
+  );
+}
+
+
+function FormRow({ ...props }) {
+  return (
+    <div className="flex py-3 text-2xl content-center flex-col">
+      <Label>{props?.label}</Label>
+      <Input
+        valueInput={props?.valueInput}
+        register={props?.register}
+        name={props?.name}
+        type={props?.type}
+        option={props?.option}
+        onChange={props?.onChange}
+        error={props?.error}
+      />
+    </div>
   );
 }
 
