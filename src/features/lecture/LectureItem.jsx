@@ -168,7 +168,6 @@ function LectureItem({ idxLecture, content, handleRemoveContent }) {
             })
         }
     }
-    console.log(state)
     const handleOnChangeName = (value) => {
         updateContent({ id, name: value }, {
             onSuccess: () => {

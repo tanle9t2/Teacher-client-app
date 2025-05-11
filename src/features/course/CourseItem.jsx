@@ -1,5 +1,10 @@
+import { TiDelete } from "react-icons/ti";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { useDeleteCourse } from "./useDeleteCourse";
+import Spinner from "../../ui/Spinner";
+import ConfirmDelete from "../../ui/ConfirmDelete";
+import Modal from "../../ui/Modal";
 
 const ImagePlaceholder = styled.div`
   width: 200px;
@@ -41,6 +46,7 @@ const Description = styled.p`
 `;
 const StyledCourseItem = styled.div`
     display:flex;
+    position:relative;
     margin: 10px 0;
     box-shadow:var(--shadow-md);
 `
@@ -56,8 +62,15 @@ const Banner = styled.div`
     height: 100%;
     margin-right:20px;
 `
+const DeleteButton = styled.div`
+    position:absolute;
+    right:5px;
+    cursor: pointer;
+`
 function CourseItem({ id, banner, name, description }) {
   const navigate = useNavigate();
+  const { isLoading, deleteCourse } = useDeleteCourse()
+  if (isLoading) return <Spinner />
   return (
     <StyledCourseItem>
       <Banner>
@@ -70,6 +83,22 @@ function CourseItem({ id, banner, name, description }) {
         </Description>
         <Link onClick={() => navigate(`/instructor/course/${id}/manage/curriculum`)}>Edit/Manage Course</Link>
       </TextContent>
+      <Modal>
+        <Modal.OpenButton opens="delete">
+          <DeleteButton>
+            <TiDelete fontSize={"30px"} />
+          </DeleteButton>
+        </Modal.OpenButton>
+        <Modal.Window name="delete">
+          <ConfirmDelete
+            resourceName="sản phẩm"
+            onConfirm={() => deleteCourse(id)}
+            disabled={isLoading}
+          />
+        </Modal.Window>
+      </Modal>
+
+
     </StyledCourseItem>
   )
 }

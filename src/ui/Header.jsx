@@ -22,15 +22,12 @@ const Text = styled.div`
   font-weight:bold;
 `
 
-function Header({ coureName }) {
+function Header({ children }) {
   const navigate = useNavigate()
   return (
     <StyleHeader>
       <Text style={{ cursor: "pointer" }} onClick={() => navigate("/")}>Back to course</Text>
-      {coureName && <Text>{coureName}</Text>}
-      {/* <UserAvatar />
-
-      <HeaderMenu /> */}
+      {children}
     </StyleHeader>
   );
 }

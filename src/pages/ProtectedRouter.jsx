@@ -1,9 +1,10 @@
 import { useNavigate } from "react-router";
-import { useUser } from "../features/Authentication/useUser";
+
 import { useEffect } from "react";
 
 import styled from "styled-components";
 import Spinner from "../ui/Spinner";
+import { useAuth } from "../context/AuthContext";
 const FullPage = styled.div`
   height: 100vh;
   display: flex;
@@ -13,7 +14,7 @@ const FullPage = styled.div`
 `;
 
 function ProtectedRouter({ children }) {
-  const { isLoading, user } = useUser();
+  const { isLoading, user } = useAuth();
   const navigate = useNavigate();
 
   useEffect(

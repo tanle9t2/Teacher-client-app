@@ -21,6 +21,10 @@ import Authentication from "./pages/Authentication";
 import LoginSection from "./features/Authentication/LoginSection"
 import RegisterSection from "./features/Authentication/RegisterSection"
 import ProtectedRouter from "./pages/ProtectedRouter";
+import { AuthProvider } from "./context/AuthContext";
+import { CourseBasicInfoProvider } from "./context/CourseBasicInfoContext";
+import NotificationMain from "./features/notification/NotificationMain";
+import Notification from "./features/notification/Notification";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -36,41 +40,52 @@ function App() {
 
       <GlobalStyles />
       <BrowserRouter>
-        <Routes>
-          <Route
-            element={
-              <ProtectedRouter>
-                <AppLayout />
-              </ProtectedRouter>
+        <AuthProvider>
+          <Routes>
 
-            }
-          >
-            <Route path="/" element={<Home />} />
-            <Route path="/instructor/communication/" element={<CommunicationLayout />}>
-              <Route index element={<Navigate replace to="assginments" />} />
-              <Route path="answer/:answerId" element={<AssignmentDetail />} />
-              <Route path="assginments" element={<AssignmentPage />} />
-              <Route path="announcements" element={<AnnouncementPage />} />
+
+            <Route
+              element={
+                <ProtectedRouter>
+                  <AppLayout />
+                </ProtectedRouter>
+
+              }
+            >
+              <Route path="/" element={<Home />} />
+              <Route path="/instructor/communication/" element={<CommunicationLayout />}>
+                <Route index element={<Navigate replace to="assginments" />} />
+                <Route path="answer/:answerId" element={<AssignmentDetail />} />
+                <Route path="assginments" element={<AssignmentPage />} />
+
+                <Route element={<AnnouncementPage />}>
+                  <Route path="announcements" element={<NotificationMain />} />
+                  <Route path="announcements/:courseId" element={<Notification />} />
+                </Route>
+
+              </Route>
             </Route>
-          </Route>
-          <Route path="/course/create" element={<CreateCoursePage />} />
+            <Route path="/course/create" element={<CreateCoursePage />} />
 
 
-          <Route
-            path="/instructor/course/:courseId/manage/"
-            element={
-              <MangeCourseLayout />
-            }
-          >
-            <Route index element={<Navigate replace to="curriculum" />} />
-            <Route index path="curriculum" element={<MangeContentPage />} />
-            <Route index path="basics" element={<ManageInformationCoursePage />} />
-          </Route>
-          <Route path="/auth" element={<Authentication />}>
-            <Route path="login" element={<LoginSection />} />
-            <Route path="register" element={<RegisterSection />} />
-          </Route>
-        </Routes>
+            <Route
+              path="/instructor/course/:courseId/manage/"
+              element={
+                <CourseBasicInfoProvider>
+                  <MangeCourseLayout />
+                </CourseBasicInfoProvider>
+              }
+            >
+              <Route index element={<Navigate replace to="curriculum" />} />
+              <Route index path="curriculum" element={<MangeContentPage />} />
+              <Route index path="basics" element={<ManageInformationCoursePage />} />
+            </Route>
+            <Route path="/auth" element={<Authentication />}>
+              <Route path="login" element={<LoginSection />} />
+              <Route path="register" element={<RegisterSection />} />
+            </Route>
+          </Routes>
+        </AuthProvider>
       </BrowserRouter>
       <Toaster
         position="top-center"
@@ -92,7 +107,7 @@ function App() {
           },
         }}
       />
-    </QueryClientProvider>
+    </QueryClientProvider >
   )
 }
 

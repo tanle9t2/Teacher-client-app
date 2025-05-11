@@ -2,6 +2,8 @@ import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 import SiderbarManageCourse from "./SiderbarManageCourse";
 import Header from "./Header";
+import { useCourseBasicInforContext } from "../context/CourseBasicInfoContext";
+import Button from "./Button";
 
 const StyledMangeCourseLayout = styled.div`
   display: grid;
@@ -18,10 +20,22 @@ const Container = styled.div`
   flex-direction: column;
   gap: 3.2rem;
 `;
-function MangeCourseLayout({ coureName }) {
+const Text = styled.div`
+  color:var(--white-color);
+  font-weight:bold;
+`
+function MangeCourseLayout() {
+  const { course, handleOnUpdate } = useCourseBasicInforContext();
+  if (!course) return;
+  const { name, publish, totalDuration } = course;
   return (
     <>
-      <Header coureName={coureName} />
+      <Header >
+        <Text>{name}</Text>
+        <Text>{Math.ceil(totalDuration / 60)} min</Text>
+        <Text style={{ background: publish ? 'green' : 'red', padding: "2px 25px", borderRadius: "5px" }}>{publish ? "Publish" : "Hide"}</Text>
+        <Button onClick={() => handleOnUpdate()} style={{ marginLeft: "auto", padding: "2px 25px" }}>Save</Button>
+      </Header >
       <StyledMangeCourseLayout>
         <SiderbarManageCourse />
         <Main>

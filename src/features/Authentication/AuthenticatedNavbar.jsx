@@ -1,19 +1,36 @@
 import { BsCartFill } from "react-icons/bs";
-import { IoNotifications } from "react-icons/io5";
+import { AuthenticationHeader } from "../../utils/helper";
+import CartSummary from "../Cart/CartSummary";
+import { NavLink } from "react-router-dom";
+import LearningSummary from "../Learning/LearningSummary";
+import ProfileMenu from "../Profile/ProfileMenu";
+import Notification from "../Notification/Notification";
 
-function AuthenticatedNavbar() {
+function AuthenticatedNavbar({ user }) {
+
   return (
-    <div className="flex items-center space-x-4">
-      <span className="px-4 text-gray-600 flex justify-center items-center">
-        <BsCartFill />
-        (3)
-      </span>
-      <span className="px-4 text-gray-600">
-        <IoNotifications />
-      </span>
-      <div className="w-14 h-14 p-4 bg-gray-800 text-white rounded-full flex items-center justify-center">
-        LT
-      </div>
+    <div className="relative flex items-center space-x-4">
+      <nav className="hidden font-bold md:flex space-x-4 items-center">
+        <NavLink className="text-gray-600 text-xl hover:text-gray-900">
+          Instructor
+        </NavLink>
+        <NavLink
+          to="/learning"
+          className="relative z-[1000] text-gray-600 hover:text-gray-900"
+        >
+          <LearningSummary />
+        </NavLink>
+        <NavLink
+          to="/cart"
+          className="relative z-[1000] px-4 text-gray-600 flex justify-center items-center"
+        >
+          <CartSummary />
+        </NavLink>
+        <span className=" text-gray-600">
+
+        </span>
+      </nav>
+      <ProfileMenu user={user} />
     </div>
   );
 }

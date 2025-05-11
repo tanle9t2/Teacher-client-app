@@ -1,66 +1,147 @@
 import { NavLink } from "react-router-dom";
-import Form from "../../ui/Form";
-import FormRow from "../../ui/FormRow";
-import Button from "../../ui/Button";
 import { useForm } from "react-hook-form";
-import useLogin from "./useLogin";
-import Spinner from "../../ui/Spinner";
+import styled from "styled-components";
 import { BiLogoGooglePlus } from "react-icons/bi";
+import { useAuth } from "../../context/AuthContext";
 
+// Styled Components
+const StyledForm = styled.form`
+  width: 100%;
+`;
+
+const FormRowWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 0.75rem 0;
+  font-size: 1.5rem;
+`;
+
+const StyledLabel = styled.label`
+  font-weight: bold;
+  padding-right: 0.75rem;
+`;
+
+const StyledInput = styled.input`
+  border: 1px solid #ccc;
+  padding: 1rem;
+  margin-top: 1rem;
+  border-radius: 0.5rem;
+  width: 100%;
+  font-size: 1.5rem;
+`;
+
+const StyledError = styled.p`
+  color: red;
+`;
+
+const StyledButton = styled.button`
+  font-size: 1.5rem;
+  padding: 1rem;
+  background-color: #9333ea;
+  color: white;
+  width: 100%;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  border: none;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`;
+
+const ForgotPassword = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  font-size: 1.5rem;
+  margin: 1rem 0;
+`;
+
+const SocialLogin = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 2rem;
+  padding: 0.75rem 0;
+
+  svg {
+    font-size: 3rem;
+    margin-left: 1rem;
+    cursor: pointer;
+  }
+`;
+
+const FormRow = ({ label, children }) => (
+  <FormRowWrapper>
+    <StyledLabel>{label}</StyledLabel>
+    {children}
+  </FormRowWrapper>
+);
+
+const Input = ({ ...props }) => (
+  <>
+    <StyledInput
+      type={props.type}
+      defaultValue={props.valueInput}
+      onChange={props.onChange}
+      {...(props.register ? { ...props.register(props.name, props.option) } : null)}
+    />
+    {props.error && <StyledError>{props.error}</StyledError>}
+  </>
+);
+
+const Button = ({ children, onClick, disabled = false }) => (
+  <StyledButton onClick={onClick} disabled={disabled}>
+    {children}
+  </StyledButton>
+);
+
+// Main LoginForm
 function LoginForm() {
-  const { isLoading, login } = useLogin();
-
+  const { defaultUserLogin, redirectGoogleLogin } = useAuth();
   const { register, handleSubmit, formState } = useForm();
   const { errors } = formState;
 
   function logging({ usernameOrEmail, password }) {
-    console.log(usernameOrEmail, password)
-    login({ usernameOrEmail, password });
+    defaultUserLogin({ usernameOrEmail, password });
   }
-  // function error({ usernameOrEmail, password }) {
-  // console.log(err);
-  // toast.error(err.message);
-  // }
+
+  function error() {
+    // handle error
+  }
+
   return (
     <>
-      <Form onSubmit={handleSubmit(logging)}>
-        <FormRow
-          label="Username"
-          type="username"
-          name="usernameOrEmail"
-          register={register}
-          option={{
-            required: "username / email are required",
-          }}
-          error={errors?.usernameOrEmail?.message}
-        />
-        <FormRow
-          label="Password"
-          type="password"
-          name="password"
-          register={register}
-          option={{
-            required: "password is required",
-          }}
-          error={errors?.password?.message}
-        />
-        <div className="flex justify-end text-2xl my-4">
+      <StyledForm onSubmit={handleSubmit(logging, error)}>
+        <FormRow label="Username/Email">
+          <Input
+            name="usernameOrEmail"
+            register={register}
+            option={{ required: "username is required" }}
+            error={errors?.usernameOrEmail?.message}
+          />
+        </FormRow>
+        <FormRow label="Password">
+          <Input
+            type="password"
+            name="password"
+            register={register}
+            option={{ required: "password is required" }}
+            error={errors?.password?.message}
+          />
+        </FormRow>
+        <ForgotPassword>
           <NavLink to="/">Forgot password</NavLink>
+        </ForgotPassword>
+        <div>
+          <Button>Login</Button>
         </div>
-        <div className="flex">
-          {isLoading ? (
-            <Spinner />
-          ) : (
-            <Button variation="primary" size="fit" disabled={isLoading}>Login</Button>
-          )}
-        </div>
-      </Form>
-      <div className="flex items-center text-4xl py-3">
-        <p>Login with </p>
-        <p className="pl-3 text-7xl cursor-pointer">
+      </StyledForm>
+      <SocialLogin>
+        <p>Login with</p>
+        <p onClick={redirectGoogleLogin}>
           <BiLogoGooglePlus />
         </p>
-      </div>
+      </SocialLogin>
     </>
   );
 }

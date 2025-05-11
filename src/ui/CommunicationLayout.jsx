@@ -24,21 +24,23 @@ function CommunicationLayout() {
     return (
         <StyledCommunicationLayout>
             <NavList>
-                <NavItem onClick={() => setIsActive("Assingments")} isActive={active === "Assingments"}>
-                    <Link>
+                <Link to="assginments">
+                    <NavItem onClick={() => setIsActive("Assingments")} isActive={active === "Assingments"}>
                         Assignments
-                    </Link>
-                </NavItem>
-                <NavItem onClick={() => setIsActive("Announcements")} isActive={active === "Announcements"}>
-                    <Link>
+                    </NavItem>
+                </Link>
+                <Link to="announcements">
+                    <NavItem onClick={() => setIsActive("Announcements")} isActive={active === "Announcements"}>
+
                         Announcements
-                    </Link>
-                </NavItem>
+
+                    </NavItem>
+                </Link>
             </NavList>
             <Main>
                 <Outlet />
             </Main>
-        </StyledCommunicationLayout>
+        </StyledCommunicationLayout >
     )
 }
 

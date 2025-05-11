@@ -1,14 +1,15 @@
-import { useQuery } from "@tanstack/react-query";
-import { getCurrentuserService } from "../../services/userService";
+import { useMutation } from "@tanstack/react-query";
+import { getCurrentUserServiceAPI } from "../../services/userService";
 
-
-export function useUser() {
-  const { isLoading, data: user } = useQuery({
-    queryKey: ["user"],
-    queryFn: getCurrentuserService,
-    retry: 1,
+function useUser() {
+  const {
+    data: currentUser,
+    isPending,
+    mutate: getCurrentUser,
+  } = useMutation({
+    mutationFn: () => getCurrentUserServiceAPI(),
   });
-  return { isLoading, user };
+  return { currentUser, isPending, getCurrentUser };
 }
 
-
+export default useUser;

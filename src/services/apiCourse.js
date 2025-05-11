@@ -37,7 +37,15 @@ export async function updateBasicsInfor({ id, name, description, level, price, c
         throw new Error("Failed getting basic info course");
     }
 }
-
+export async function deleteCourseByID(id) {
+    try {
+        const res = await AUTH_REQUEST.delete(`/course/${id}`);
+        return res.data;
+    } catch (error) {
+        console.error("Failed delete course:", error);
+        throw new Error("Failed delete course");
+    }
+}
 export async function getCourseOfTeacher(page, kw) {
     const params = new URLSearchParams();
     if (kw)
