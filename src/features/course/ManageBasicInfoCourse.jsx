@@ -5,6 +5,7 @@ import SelectedBox from '../../ui/SelectedBox';
 import { formatWithDots } from '../../utils/helper';
 import Button from '../../ui/Button';
 import { useCourseBasicInforContext } from '../../context/CourseBasicInfoContext';
+import WarningText from '../../ui/WarningText';
 
 // Styled Components
 const Container = styled.div`
@@ -108,7 +109,7 @@ function ManageBasicInfoCourse() {
   const uploadRef = useRef(null)
   if (!course) return;
 
-  const { name, price, description, level, levels, banner, category, publish: isPublish } = course;
+  const { name, price, description, level, levels, banner, category, publish: isPublish, status } = course;
 
 
   function handleOnChangeName(e) {
@@ -150,6 +151,7 @@ function ManageBasicInfoCourse() {
   return (
     <>
       <Container>
+        {status === "INACTIVE" && <WarningText text={"The course has violated the standards. Please contact the administrator to request access."} />}
         <Heading>Course landing page</Heading>
         <Description>
           Your course landing page is crucial to your success on Udemy. If it’s done right, it can also help you gain visibility in the search engines.
@@ -221,7 +223,7 @@ function ManageBasicInfoCourse() {
         </Section>
       </Container >
       <div className='ml-auto'>
-        <Button onClick={() => handleOnPublish()} variation="primary" size="fit">{isPublish ? "Hide" : "Publish"}</Button>
+        <Button onClick={() => handleOnPublish()} disabled={status === "INACTIVE"} variation="primary" size="fit">{(isPublish) ? "Hide" : "Publish"}</Button>
       </div></>
   );
 

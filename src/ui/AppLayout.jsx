@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import Sidebar from "./Sidebar";
-import { Outlet } from "react-router";
+import { Link, Outlet } from "react-router";
+import ProfileMenu from "../features/Profile/ProfileMenu";
+import { useAuth } from "../context/AuthContext";
 
 const StyledAppLayout = styled.div`
   display: grid;
@@ -28,23 +30,12 @@ const UserInfo = styled.div`
   gap: 10px;
 `;
 
-const UserLabel = styled.span`
-  font-size: 14px;
-`;
-
-const NotificationIcon = styled.div`
-  width: 30px;
-  height: 30px;
-  background-color: #6b21a8;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
+const UserLabel = styled(Link)`
   font-size: 14px;
 `;
 
 function AppLayout() {
+  const { user } = useAuth();
   return (
     <StyledAppLayout>
       <Sidebar />
@@ -53,7 +44,7 @@ function AppLayout() {
           <Header>
             <UserInfo>
               <UserLabel>Student</UserLabel>
-              <NotificationIcon>LT</NotificationIcon>
+              <ProfileMenu user={user} />
             </UserInfo>
           </Header>
 

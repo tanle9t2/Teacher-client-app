@@ -7,6 +7,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import Input from "../../ui/Input";
 import { IoSearch } from "react-icons/io5";
 import { useState } from "react";
+import SelectedBox from "../../ui/SelectedBox";
 
 const Section = styled.div`
   background-color: white;
@@ -45,16 +46,16 @@ const ResourceSection = styled.div`
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;
 
-
-
 const StyledCourseData = styled.div`
   flex: 1;
   padding: 20px;
 `;
+const FILTER = ["Newest", "Oldest", 'A-Z', 'Z-A', 'Published first', "Unpublished first"]
 function CourseData() {
   const { isLoading, courses, totalPages } = useCourses()
   const [searchParams, setSearchParams] = useSearchParams()
   const [kw, setKw] = useState("")
+
   const navigate = useNavigate()
   if (isLoading) return <Spinner />
   function handleOnSearch() {
@@ -68,6 +69,8 @@ function CourseData() {
       handleOnSearch()
     }
   }
+
+
   return (
     <StyledCourseData>
       <Section>
@@ -83,7 +86,9 @@ function CourseData() {
         <div style={{ display: "flex", alignItems: "center" }}>
           <Input value={kw} onKeyDown={handleKeyDownEnter} onChange={(e) => setKw(e.target.value)} placeholder="Search your course" />
           <Button onClick={() => handleOnSearch()} style={{ height: "100%" }} ><IoSearch /></Button>
+
         </div>
+
       </Section>
       <ResourceSection>
         {courses.map(({ name, banner, description, id }) => <CourseItem key={id} id={id} name={name} banner={banner} description={description} />)}

@@ -25,6 +25,7 @@ import { AuthProvider } from "./context/AuthContext";
 import { CourseBasicInfoProvider } from "./context/CourseBasicInfoContext";
 import NotificationMain from "./features/notification/NotificationMain";
 import Notification from "./features/notification/Notification";
+import Profile from "./pages/Profile";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -53,6 +54,7 @@ function App() {
               }
             >
               <Route path="/" element={<Home />} />
+              <Route path="/profile" element={<Profile />} />
               <Route path="/instructor/communication/" element={<CommunicationLayout />}>
                 <Route index element={<Navigate replace to="assginments" />} />
                 <Route path="answer/:answerId" element={<AssignmentDetail />} />
