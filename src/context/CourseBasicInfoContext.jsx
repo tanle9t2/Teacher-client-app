@@ -20,11 +20,12 @@ function CourseBasicInfoProvider({ children }) {
     if (isLoading || loadingCategory || isPending) return <Spinner />
 
     function handleOnChangeValue(value) {
+
         setCourseState(prev => ({ ...prev, ...value }))
     }
     function handleOnUpdate() {
         const { name, price, description, level, category } = courseState
-        updateBasicsInfor({ name, price, description, level, category })
+        updateBasicsInfor({ name, price, description, level, category: category.id })
     }
 
     return (

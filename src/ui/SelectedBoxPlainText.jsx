@@ -5,11 +5,11 @@ import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
-function SelectedBox({ style, state, handleOnChange, data, defaultValue }) {
+function SelectedBoxPlaintText({ style, state, handleOnChange, data, defaultValue }) {
     return (
         <FormControl sx={{ m: 1, minWidth: 500, fontSize: 20, ...style }}>
             <Select
-                value={state.id || defaultValue}
+                value={state || defaultValue}
                 onChange={handleOnChange}
                 displayEmpty
                 inputProps={{ 'aria-label': 'Without label' }}
@@ -28,11 +28,11 @@ function SelectedBox({ style, state, handleOnChange, data, defaultValue }) {
                 {data.map((item) => <MenuItem sx={{
                     fontSize: 16,
 
-                }} key={item.id} value={item.id}>{item.name}</MenuItem>)}
+                }} key={item} value={item}>{item}</MenuItem>)}
             </Select>
         </FormControl >
     );
 }
 
-export default SelectedBox
+export default SelectedBoxPlaintText
 

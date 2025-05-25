@@ -97,12 +97,12 @@ const Button = ({ children, onClick, disabled = false }) => (
 
 // Main LoginForm
 function LoginForm() {
-  const { defaultUserLogin, redirectGoogleLogin } = useAuth();
+  const { defaultUserLogin } = useAuth();
   const { register, handleSubmit, formState } = useForm();
   const { errors } = formState;
 
   function logging({ usernameOrEmail, password }) {
-    defaultUserLogin({ usernameOrEmail, password });
+    defaultUserLogin({ usernameOrEmail, password, roleType: "TEACHER" });
   }
 
   function error() {
@@ -136,12 +136,7 @@ function LoginForm() {
           <Button>Login</Button>
         </div>
       </StyledForm>
-      <SocialLogin>
-        <p>Login with</p>
-        <p onClick={redirectGoogleLogin}>
-          <BiLogoGooglePlus />
-        </p>
-      </SocialLogin>
+
     </>
   );
 }

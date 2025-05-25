@@ -7,8 +7,8 @@ import toast from "react-hot-toast";
 function useLogin() {
   const navigate = useNavigate();
   const { isLoading, mutate: defaultLogin } = useMutation({
-    mutationFn: ({ usernameOrEmail, password }) =>
-      loginAPI({ usernameOrEmail, password }),
+    mutationFn: ({ usernameOrEmail, password, roleType }) =>
+      loginAPI({ usernameOrEmail, password, roleType }),
     onSuccess: (user) => {
       setLocalStorageToken(user.tokenDTO);
       navigate("/");

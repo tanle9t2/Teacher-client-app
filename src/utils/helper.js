@@ -124,7 +124,8 @@ export const getFileNameFromUrl = (url) => {
     return decodeURIComponent(cleanUrl.substring(cleanUrl.lastIndexOf('/') + 1));
 }
 export const formatWithDots = (number) => {
-    if (!number) return null;
+
+    if (!number) return '';
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 export const convertDate = (createdAt) => {

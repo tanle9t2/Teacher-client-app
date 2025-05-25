@@ -3,6 +3,7 @@ import Sidebar from "./Sidebar";
 import { Link, Outlet } from "react-router";
 import ProfileMenu from "../features/Profile/ProfileMenu";
 import { useAuth } from "../context/AuthContext";
+import { CLIENT_URL } from "../utils/Url";
 
 const StyledAppLayout = styled.div`
   display: grid;
@@ -43,7 +44,8 @@ function AppLayout() {
         <Container>
           <Header>
             <UserInfo>
-              <UserLabel>Student</UserLabel>
+              <Link to={CLIENT_URL}> <UserLabel>Student</UserLabel></Link>
+
               <ProfileMenu user={user} />
             </UserInfo>
           </Header>

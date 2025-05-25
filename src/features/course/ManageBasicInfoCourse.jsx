@@ -1,11 +1,12 @@
 import React, { useRef } from 'react';
 import styled from 'styled-components';
 import SelectedBox from '../../ui/SelectedBox';
-
+import SelectedBoxPlainText from '../../ui/SelectedBoxPlainText';
 import { formatWithDots } from '../../utils/helper';
 import Button from '../../ui/Button';
 import { useCourseBasicInforContext } from '../../context/CourseBasicInfoContext';
 import WarningText from '../../ui/WarningText';
+
 
 // Styled Components
 const Container = styled.div`
@@ -115,10 +116,14 @@ function ManageBasicInfoCourse() {
   function handleOnChangeName(e) {
     handleOnChangeValue({ name: e.target.value })
   }
+  function handleOnChangePrice(price) {
+    handleOnChangeValue({ price })
+  }
   function handleOnChangeDescription(e) {
     handleOnChangeValue({ description: e.target.value })
   }
   function handleOnChangeLevel(e) {
+
     const level = e.target.value;
 
     handleOnChangeValue({ level })
@@ -137,8 +142,9 @@ function ManageBasicInfoCourse() {
   }
   function handleOnChangeCategory(e) {
     if (e.target.value) {
-      const category = e.target.value;
-      handleOnChangeValue({ category })
+      const categoryId = e.target.value;
+      const newCate = categories.filter(c => c.id === categoryId)[0];
+      handleOnChangeValue({ category: newCate })
     }
   }
   function handleOnPublish() {
@@ -180,20 +186,24 @@ function ManageBasicInfoCourse() {
         <Section>
           <Label>Price</Label>
           <Input
-            value={formatWithDots(price)} type="text"
+            value={formatWithDots(price)}
+            type="text"
             onChange={(e) => {
-              const regex = /^\d*$/;
-              const value = e.target.value.replaceAll(".", "");
-              if (regex.test(value))
-                levels(value)
+              const rawValue = e.target.value.replaceAll(".", "");
+              const regex = /^(0|[1-9]\d*)?$/;
+              if (regex.test(rawValue)) {
+                handleOnChangePrice(rawValue); // send the unformatted number
+              }
             }}
-            placeholder="Your title should be a mix of attention-grabbing, informative, and optimized for search" />
+            placeholder="Enter a price (numbers only)"
+          />
+
           <CharacterCount>55</CharacterCount>
         </Section>
         <Section>
           <Label>Basic info</Label>
           <div style={{ display: "flex", justifyContent: "space-between", marginLeft: "-8px" }}>
-            <SelectedBox handleOnChange={handleOnChangeLevel} state={level} data={course.levels} defaultValue={"Select level --"} />
+            <SelectedBoxPlainText handleOnChange={handleOnChangeLevel} state={level} data={levels} defaultValue={"Select level --"} />
             <SelectedBox handleOnChange={handleOnChangeCategory} state={category} data={categories} defaultValue={"Choose a category"} />
           </div>
         </Section>

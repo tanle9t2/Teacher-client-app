@@ -19,7 +19,8 @@ export async function getBasicsInfo(id) {
         throw new Error("Failed getting basic info course");
     }
 }
-export async function updateBasicsInfor({ id, name, description, level, price, category }, file) {
+export async function updateBasicsInfor({ id, name, description, level, price, publish, category }, file) {
+
     const formData = new FormData()
     if (name) formData.append("name", name)
     if (description) formData.append("description", description)
@@ -27,6 +28,7 @@ export async function updateBasicsInfor({ id, name, description, level, price, c
     if (category) formData.append("category", category)
     if (file) formData.append("file", file)
     if (price) formData.append("price", price)
+    if (publish !== null && publish !== undefined) formData.append("publish", publish)
     try {
         const res = await AUTH_REQUEST.post(`/course/${id}`, formData, {
             headers: { 'Content-Type': 'multipart/form-data' }
