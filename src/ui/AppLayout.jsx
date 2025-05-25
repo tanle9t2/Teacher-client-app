@@ -44,7 +44,7 @@ function AppLayout() {
         <Container>
           <Header>
             <UserInfo>
-              <Link to={CLIENT_URL}> <UserLabel>Student</UserLabel></Link>
+              <UserLabel to={CLIENT_URL}>Student</UserLabel>
 
               <ProfileMenu user={user} />
             </UserInfo>

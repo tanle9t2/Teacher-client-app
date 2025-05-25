@@ -1,6 +1,10 @@
 import axios from "axios";
 import axiosRetry from "axios-retry";
-import { getAccessToken, removeLocalStorageToken, setLocalStorageToken } from "./helper";
+import {
+    getAccessToken,
+    removeLocalStorageToken,
+    setLocalStorageToken,
+} from "./helper";
 import { refreshToken } from "../services/tokenService";
 import { BASE_URL } from "./Url";
 
@@ -56,16 +60,14 @@ AUTH_REQUEST.interceptors.response.use(
 
                     config.headers["Authorization"] = `Bearer ${token.accessToken}`;
 
-                    retryQueue.length = 0;
+                    retryQueue = [];
 
                     return AUTH_REQUEST(config);
-                    /**
-                     * 2 types of error:
-                     *  + Already Existed by fetching by socket: 400
-                     *  + Already Expired refresh token: 401, 500
-                     */
-                } catch (error) {
+                } catch (err) {
+                    console.log(err)
+                    retryQueue = [];
                     removeLocalStorageToken();
+                    window.location.href = "/auth/login";
                     return Promise.reject(error);
                 } finally {
                     isRefresh = false;

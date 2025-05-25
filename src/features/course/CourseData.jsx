@@ -60,6 +60,9 @@ function CourseData() {
   if (isLoading) return <Spinner />
   function handleOnSearch() {
     if (searchParams && searchParams !== "") {
+      if (searchParams.get("page")) {
+        searchParams.delete("page")
+      }
       searchParams.set("kw", kw)
       setSearchParams(searchParams)
     }

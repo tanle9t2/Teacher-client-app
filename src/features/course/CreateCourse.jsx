@@ -8,6 +8,7 @@ import Spinner from "../../ui/Spinner";
 import Button from "../../ui/Button";
 import { useCreateCourse } from "./useCreateCourse";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 
 const Container = styled.div`
@@ -138,14 +139,15 @@ const Phase2 = ({ category, setCategory }) => {
   const { isLoading, categories } = useCategories()
   if (isLoading) return <Spinner />
   function handleOnChange(event) {
-    setCategory(event.target.value)
+    const categoryId = event.target.value;
+    const newCate = categories.filter(c => c.id === categoryId)[0];
+    setCategory(newCate)
   }
+
   return <>
     <Title className="">What category best fits the knowledge you'll share?</Title>
     <Subtitle>If you're not sure about the right category, you can change it later.</Subtitle>
     <SelectedBox handleOnChange={handleOnChange} state={category} data={categories} defaultValue={"Choose a category"} />
-
-
   </>
 }
 function CreateCourse() {
@@ -154,6 +156,7 @@ function CreateCourse() {
   const [step, setStep] = useState(1)
   const progress = (step / 2) * 100;
   const { isLoading, createCourse } = useCreateCourse()
+  const { user } = useAuth();
   const navigate = useNavigate()
   if (isLoading) return <Spinner />
   function handleOnNext() {
@@ -173,7 +176,7 @@ function CreateCourse() {
     }
   }
   function handleOnCreate() {
-    createCourse({ name: title, categoryId: category, teacherId: "a0a0dbd6-3be9-4a57-94aa-7e752f09c786" },
+    createCourse({ name: title, categoryId: category.id, teacherId: user.id },
       {
         onSuccess: () => {
           navigate("/")
