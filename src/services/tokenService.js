@@ -3,7 +3,7 @@ import { getRefreshToken } from "../utils/helper";
 
 export async function refreshToken() {
   const res = await API.post(
-    "/api/v1/auth/refresh-token",
+    "auth/refresh-token",
     JSON.stringify({
       refreshToken: getRefreshToken(),
     }),

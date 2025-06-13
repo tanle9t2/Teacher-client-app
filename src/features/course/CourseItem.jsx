@@ -81,7 +81,7 @@ function CourseItem({ id, banner, name, description }) {
         <Description>
           {description || "Create a really attractive description"}
         </Description>
-        <Link onClick={() => navigate(`/instructor/course/${id}/manage/curriculum`)}>Edit/Manage Course</Link>
+        <Link onClick={() => navigate(`/course/${id}/manage/curriculum`)}>Edit/Manage Course</Link>
       </TextContent>
       <Modal>
         <Modal.OpenButton opens="delete">

@@ -64,7 +64,7 @@ function Sidebar() {
         <FaVideo size={20} />
         <span>Courses</span>
       </MenuItem>
-      <MenuItem onClick={() => navigate("/instructor/communication")} expanded={expanded}>
+      <MenuItem onClick={() => navigate("/communication")} expanded={expanded}>
         <FaComment size={20} />
         <span>Communication</span>
       </MenuItem>

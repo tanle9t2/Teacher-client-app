@@ -40,7 +40,7 @@ function App() {
       <ReactQueryDevtools initialIsOpen={false} />
 
       <GlobalStyles />
-      <BrowserRouter>
+      <BrowserRouter basename="/instructor">
         <AuthProvider>
           <Routes>
 
@@ -55,7 +55,7 @@ function App() {
             >
               <Route path="/" element={<Home />} />
               <Route path="/profile" element={<Profile />} />
-              <Route path="/instructor/communication/" element={<CommunicationLayout />}>
+              <Route path="/communication/" element={<CommunicationLayout />}>
                 <Route index element={<Navigate replace to="assginments" />} />
                 <Route path="answer/:answerId" element={<AssignmentDetail />} />
                 <Route path="assginments" element={<AssignmentPage />} />
@@ -71,7 +71,7 @@ function App() {
 
 
             <Route
-              path="/instructor/course/:courseId/manage/"
+              path="/course/:courseId/manage/"
               element={
                 <CourseBasicInfoProvider>
                   <MangeCourseLayout />
